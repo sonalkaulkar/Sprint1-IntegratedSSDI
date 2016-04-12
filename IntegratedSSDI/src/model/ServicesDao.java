@@ -1105,14 +1105,15 @@ public class ServicesDao {
 
             PreparedStatement stmt = null;
         	connection = ConnectionUtil.getConnection(connectionData);
-        	String query = "select count(*)  from orderdetails where  tech_id = ?";
+        	String query = "select orderid  from orderdetails where  tech_id = ?";
         	stmt = connection.prepareStatement(query);
+        	System.out.println(t.getTechId());
             stmt.setString(1, t.getTechId());
             ResultSet rs = stmt.executeQuery();
-            if(rs.next())
-            {
-            	return 2 ;
-            }
+            //System.out.println(rs.next());
+            if(!rs.next())
+            {  
+            	
         	 query = "delete from technician  where techId = ?";
             
             
@@ -1122,7 +1123,11 @@ public class ServicesDao {
             stmt.executeUpdate();
             
                return 0;	
-                  
+            }
+            else
+            {
+            	return 2;
+            }
         } catch (SQLException ex) {
             
             System.out.println("hiii");
@@ -1142,14 +1147,14 @@ public class ServicesDao {
 
             PreparedStatement stmt = null;
         	connection = ConnectionUtil.getConnection(connectionData);
-        	String query = "select count(*)  from orderdetails where  delivery_id = ?";
+        	String query = "select orderid  from orderdetails where  delivery_id = ?";
         	stmt = connection.prepareStatement(query);
             stmt.setString(1, d.getDeliveryId());
             ResultSet rs = stmt.executeQuery();
-            if(rs.next())
+            if(!rs.next())
             {
-            	return 2 ;
-            }
+            	
+            
             
             query = "delete from deliverystaff  where deliveryId = ?";
             
@@ -1159,7 +1164,9 @@ public class ServicesDao {
             stmt.executeUpdate();
             
                return 0;	
-                  
+            }
+            else
+            	{return 2 ;}
         } catch (SQLException ex) {
             
             System.out.println("hiii");
