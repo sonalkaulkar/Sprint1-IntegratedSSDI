@@ -11,6 +11,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import model.Login;
 import model.ServicesDao;
@@ -62,11 +63,16 @@ public class  DeleteStoreController extends HttpServlet {
 	   protected void processRequest(HttpServletRequest request, HttpServletResponse response)
 	            throws ServletException, IOException {
 	        response.setContentType("text/html;charset=UTF-8");
+	        PrintWriter out = response.getWriter();
 	        try  {
 	            /* TODO output your page here. You may use following sample code. */
 	     //     List errorMsgs = new  LinkedList();
-	        	
-	          PrintWriter out = response.getWriter();
+	        	HttpSession session=request.getSession(false);  
+		          if(session!=null){  
+		              String username=(String)session.getAttribute("username");  
+		                
+		              //out.print("Hello, "+username); 
+//	          PrintWriter out = response.getWriter();
 	           String store_id = request.getParameter("storeId");
 	          
 	           Store store = new Store(store_id);
@@ -93,7 +99,11 @@ public class  DeleteStoreController extends HttpServlet {
 	                 
 	            
 	           
-	    }  catch (Exception ex) {
+	    }   else{  
+            out.print("Please login first");  
+            request.getRequestDispatcher("InitialPage.jsp").include(request, response);  
+        }
+}catch (Exception ex) {
 	    	ex.printStackTrace();
 	       }
 	    }

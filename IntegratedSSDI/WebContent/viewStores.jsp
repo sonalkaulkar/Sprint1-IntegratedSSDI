@@ -24,11 +24,12 @@
   </div>
   
   <div id="main">
+   
     <form >
              
                    <center>
                <h1>View Store Details</h1>
-          
+          	<div style="height:200px; overflow:auto">	
                <table>
               
 
@@ -60,6 +61,7 @@
                     out.print("</tr>");
                    }}        %>
               </table>
+              </div>
         <table><tr>
                    <td>Enter the store Id :
                    <input type ="text" name="storeId" /></td>
@@ -77,8 +79,8 @@
 
   <div id="left">
     <div class="pad">
-    <br />
-       <a href="AddStore.jsp"><button style="height:30px; width: 100px">Add Store</button></a>
+ <br />	 
+	  <a href="AddStore.jsp"><button style="height:30px; width: 100px">Add Store</button></a>
     <br /><br />
       	
       <!--  <button style="color:blue;border-radius:10px;height:30px; width: 150px">-->
@@ -86,10 +88,20 @@
       <input type="submit" value="Manage Store" /></form>
       
     <br /><br />
+ 	<a href="ResetPassword.jsp"><button style="height:30px; width: 150px">Reset Password</button></a>
   </div>
+  <br />
 </div>
+
 <div id="footer">
-    <div id="r"> &copy; Copyright 2016, Your Website - <a href="AdminHome.jsp">Home</a> - <a href="InitialPage.jsp">Logout</a><br />
+     <div id="r"> &copy; Copyright 2016, Your Website - <label> <%
+      if(session!=null){  
+        String username=(String)session.getAttribute("username");  
+          
+       out.print("Hello, "+username);
+       
+        }  
+      %></label><a href="AdminHome.jsp"> - Home</a> - <a href="logoutcontroller">Logout</a><br />
       Design: SSDI project1</div>
     <div id="l">Contact us: Office-000-000-0000 </div>
   </div>

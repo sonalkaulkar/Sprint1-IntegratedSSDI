@@ -48,9 +48,9 @@
            </tr>
            </table>
            <br></br>
-           <h1><center><input type="submit" value="Login" /></center></h1>
+           <h1><center><input type="submit" value="LOGIN" />&nbsp;&nbsp;&nbsp;
            
-           
+           <input type="submit" name="register" value="REGISTER"  onclick="form.action='Registration.jsp';"/></center></h1>
            
 </form>
   </div>

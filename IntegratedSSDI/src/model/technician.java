@@ -33,6 +33,13 @@ this.tech_phone_no=tech_phone_no;
 this.store_id=store_id;
 this.last_completed_timestamp=last_completed_timestamp;
 }
+
+public technician(String tech_id)
+{
+	
+	techId = tech_id;
+}
+
 public Timestamp getLast_completed_timestamp() {
 	return last_completed_timestamp;
 }
@@ -84,7 +91,7 @@ public void setTechStatus(String techStatus) {
 @Override
 public RequestDispatcher directUser(HttpServletRequest request) {
 	// TODO Auto-generated method stub
-    RequestDispatcher r = request.getRequestDispatcher("/technicianhome.jsp") ;
+    RequestDispatcher r = request.getRequestDispatcher("/TechnicianHome.jsp") ;
     return r;
 }
 }

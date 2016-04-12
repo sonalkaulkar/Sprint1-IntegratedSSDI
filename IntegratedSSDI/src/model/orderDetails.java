@@ -1,10 +1,11 @@
 package model;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 
 public class orderDetails {
 public String orderId;
-public Date date_of_order;
+public Timestamp date_of_order;
 public String prodId;
 public String make;
 public String tech_Id;
@@ -18,7 +19,7 @@ public String payment_status;
 public orderDetails() {
 	// TODO Auto-generated constructor stub
 }
-public orderDetails(String orderId,Date date_of_order,String prodId,String make,String tech_Id,
+public orderDetails(String orderId,Timestamp date_of_order,String prodId,String make,String tech_Id,
 		String store_Id,String customer_Id,String order_status,String delivery_id,String description,String payment_status)
 {
 this.customer_Id=customer_Id;
@@ -36,7 +37,7 @@ this.payment_status=payment_status;
 public String getCustomer_Id() {
 	return customer_Id;
 }
-public Date getDate_of_order() {
+public Timestamp getDate_of_order() {
 	return date_of_order;
 }
 public String getDelivery_id() {
@@ -72,7 +73,7 @@ public String getTech_Id() {
 public void setCustomer_Id(String customer_Id) {
 	this.customer_Id = customer_Id;
 }
-public void setDate_of_order(Date date_of_order) {
+public void setDate_of_order(Timestamp date_of_order) {
 	this.date_of_order = date_of_order;
 }
 public void setDelivery_id(String delivery_id) {

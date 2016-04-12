@@ -14,6 +14,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 
 /**
@@ -59,20 +60,30 @@ public class LoadStoreController extends HttpServlet {
 	   protected void processRequest(HttpServletRequest request, HttpServletResponse response)
 	            throws ServletException, IOException {
 	        response.setContentType("text/html;charset=UTF-8");
+	        PrintWriter out = response.getWriter();
 	        try  {
+	        	HttpSession session=request.getSession(false);  
+		          if(session!=null){  
+		              String username=(String)session.getAttribute("username");  
+		                
+		            //  out.print("Hello, "+username); 
 	        	System.out.println("inside view stores controller");
 	            /* TODO output your page here. You may use following sample code. */
 	     //     List errorMsgs = new  LinkedList();
 	        	 String store_id = request.getParameter("storeId");
 	        	 Store s = new Store(store_id);
-	          PrintWriter out = response.getWriter();
+	          //PrintWriter out = response.getWriter();
 	         Store sdetails  = serviceDao.loadstoredetails(s);
 	                 RequestDispatcher rd = null;
 	                 request.setAttribute("storedet", sdetails);
 	                 RequestDispatcher rd1=request.getRequestDispatcher("/UpdateStoreDetails.jsp");
 	                   rd1.include(request, response);
 	           
-	    }  catch (Exception ex) {
+	    }  else{  
+            out.print("Please login first");  
+            request.getRequestDispatcher("InitialPage.jsp").include(request, response);  
+        }
+} catch (Exception ex) {
 	    	ex.printStackTrace();
 	       }
 	    }

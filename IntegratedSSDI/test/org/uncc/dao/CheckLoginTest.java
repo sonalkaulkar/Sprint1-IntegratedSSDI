@@ -64,7 +64,7 @@ public class CheckLoginTest {
 		}
 		
 		/* Invoke function under test */
-		Login L= new Login("Tec1234", "Tec1234");
+		Login L= new Login("Tec1234", "Tec1234",0);
 		try {
 			serviceDao.checkLogin(L);
 		} catch (Exception e) {

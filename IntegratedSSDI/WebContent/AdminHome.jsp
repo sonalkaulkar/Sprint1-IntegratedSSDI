@@ -38,7 +38,7 @@ $(".slidingDiv").slideToggle();
   </div>
   
   <div id="main">
-   
+      
   </div>
          
   
@@ -59,7 +59,14 @@ $(".slidingDiv").slideToggle();
 </div>
   
 <div id="footer">
-    <div id="r"> &copy; Copyright 2016, Your Website - <a href="AdminHome.jsp">Home</a> - <a href="InitialPage.jsp">Logout</a><br />
+     <div id="r"> &copy; Copyright 2016, Your Website - <label> <%
+      if(session!=null){  
+        String username=(String)session.getAttribute("username");  
+          
+       out.print("Hello, "+username);
+       
+        }  
+      %></label><a href="AdminHome.jsp"> - Home</a> - <a href="logoutcontroller">Logout</a><br />
       Design: SSDI project1</div>
     <div id="l">Contact us: Office-000-000-0000 </div>
   </div>

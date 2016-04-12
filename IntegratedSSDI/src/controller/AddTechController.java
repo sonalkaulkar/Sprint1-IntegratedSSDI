@@ -21,6 +21,9 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.uncc.util.EmailUtility;
 
 import com.sun.jmx.snmp.Timestamp;
 import com.sun.org.apache.xerces.internal.impl.xpath.regex.ParseException;
@@ -40,6 +43,10 @@ import model.technician;
 public class AddTechController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private ServicesDao serviceDao;
+	private String host;
+    private String port;
+    private String user;
+    private String pass;
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -52,6 +59,10 @@ public class AddTechController extends HttpServlet {
     public void init(ServletConfig config) throws ServletException {
   		super.init(config);
   		ServletContext context = getServletContext();
+  		 host = context.getInitParameter("host");
+         port = context.getInitParameter("port");
+         user = context.getInitParameter("user");
+         pass = context.getInitParameter("pass");
   		ServicesDaoFactory factory = ServicesDaoFactory.getInstance(context.getInitParameter("environment"));
   		 serviceDao = factory.createServiceDao();
   	}
@@ -77,10 +88,15 @@ public class AddTechController extends HttpServlet {
 	   protected void processRequest(HttpServletRequest request, HttpServletResponse response)
 	            throws ServletException, IOException {
 	        response.setContentType("text/html;charset=UTF-8");
+	        PrintWriter out = response.getWriter();
 	        try  {
-	            
+	        	HttpSession session=request.getSession(false);  
+		          if(session!=null){  
+		              String username=(String)session.getAttribute("username");  
+		                
+		             // out.print("Hello, "+username);  
 	           System.out.println("inside add technician controller");
-	           PrintWriter out = response.getWriter();
+	        //   PrintWriter out = response.getWriter();
 	           RequestDispatcher rd = null;
 	           
 	           String tech_id = request.getParameter("techId");//change these names as per jsp names
@@ -89,8 +105,8 @@ public class AddTechController extends HttpServlet {
 	           //String no_of_orders = request.getParameter("Ordercount") ;
 	           String tech_phone = request.getParameter("tech_phone_no");
 	           String tech_emailid = request.getParameter("tech_email_id");
-	           String store_id = request.getParameter("store_id");
-	           String username = request.getParameter("username");
+	       //    String store_id = request.getParameter("store_id");
+	           String username1 = request.getParameter("username1");
 	           //java.sql.Timestamp t=convertStringToTimestamp(request.getParameter("lastcompletedtime"));
 	           
 	           java.util.Date utilDate = new java.util.Date();
@@ -99,12 +115,25 @@ public class AddTechController extends HttpServlet {
 	            cal.set(Calendar.MILLISECOND, 0);
 	            java.sql.Timestamp t = new java.sql.Timestamp(utilDate.getTime());
 	          	           
-	           technician tech = new technician(tech_id,tech_name,"free",0,tech_emailid,tech_phone,store_id,t);
-	           Login L = new Login (username,username); 
+	           technician tech = new technician(tech_id,tech_name,"free",0,tech_emailid,tech_phone,"",t);
+	           Login L = new Login (username1,username1,0); 
 	                 
-	                 int flag = serviceDao.addTechnician(tech,L);
+	                 int flag = serviceDao.addTechnician(tech,L,username);
 	                 if (flag == 0)
-	                 {
+	                 {	String recipient  = tech_emailid;
+                     String subject = "Registered as delivery staff";
+                     String content = "Your username is Tec"+username+" and password is the same as the username";
+                     String resultMessage = "";
+                    try{
+                     EmailUtility.sendEmail(host, port, user, pass, recipient, subject,
+                             content);
+                     resultMessage = "The e-mail was sent successfully";
+                     System.out.println(resultMessage);
+                 } catch (Exception ex) {
+                     ex.printStackTrace();
+                     resultMessage = "There were an error: " + ex.getMessage();
+                     System.out.println(resultMessage);
+                 } 
 	                	 String str = "Registration Successfully";
 	                	 request.setAttribute("msg", str);
 	                	 System.out.println(str);//has to be deleted after adding this message in jsp page
@@ -129,7 +158,12 @@ public class AddTechController extends HttpServlet {
 	                 }
 	                
 	                           
-	    }  catch (Exception ex) {
+		          } else{  
+		              out.print("Please login first");  
+		              request.getRequestDispatcher("InitialPage.jsp").include(request, response);  
+		          }
+
+		          }  catch (Exception ex) {
 	    	System.out.println("Exception in addtech controller");
 	    	ex.printStackTrace();
 	       }

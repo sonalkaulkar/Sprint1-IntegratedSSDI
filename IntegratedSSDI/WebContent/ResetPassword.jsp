@@ -3,6 +3,31 @@
 <head>
 <title>Online servicing application</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<script>
+        function validateForm () {
+         
+         var x = document.forms["resetpassword"]["old_password"].value;
+         if (x == null || x == "") {
+          alert("Please provide the Old Password");
+         return false;         
+         }
+         
+         var x = document.forms["resetpassword"]["new_password"].value;
+         if (x == null || x == "") {
+          alert("Please provide the New Password");
+         return false;         
+         }
+         
+         var x = document.forms["resetpassword"]["confirm_password"].value;
+         if (x == null || x == "") {
+          alert("Please Confirm the New Password");
+         return false;         
+         }
+
+         
+        }
+        </script>
+
 <link rel="stylesheet" type="text/css" href="style.css" media="screen" />
 </head>
 <body>
@@ -20,11 +45,13 @@
   </div>
   
   <div id="main">
-     <form  method = "post" action="resetpasswordcontroller">
+     
+     <form  name = "resetpassword" onsubmit = "return validateForm()" method = "post" action="resetpasswordcontroller">
        
            <table align="center" >
-               <center><h1>RESET PASSWORD</h1></center>
+               <center><h1>CHANGE PASSWORD</h1></center>
                <tr>
+               <br></br>
                <td>OLD PASSWORD:</td>
                <td><input type="password" name="old_password" value="" /></td>
                </tr>
@@ -42,7 +69,8 @@
                
            </tr>
            </table>
-           <td><center><input type="submit" value="SUBMIT" /><input type="reset" value="CANCEL" /></td></center>
+           <br></br>
+           <td><center><input type="submit" value="SUBMIT" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="reset" value="RESET" /></td></center>
          
 </form>
   </div>
@@ -54,7 +82,14 @@
   </div>
 </div>
 <div id="footer">
-    <div id="r"> &copy; Copyright 2016, Your Website <a href="InitialPage.jsp">Logout</a><br />
+     <div id="r"> &copy; Copyright 2016, Your Website - <label> <%
+      if(session!=null){  
+        String username=(String)session.getAttribute("username");  
+          
+       out.print("Hello, "+username);
+       
+        }  
+      %></label><a href="InitialPage.jsp"> - Home</a> - <a href="logoutcontroller">Logout</a><br />
       Design: SSDI project1</div>
     <div id="l">Contact us: Office-000-000-0000 </div>
   </div>

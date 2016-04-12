@@ -14,10 +14,8 @@ import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
+import org.uncc.util.EmailUtility;
 
 import model.Login;
 import model.ServicesDao;
@@ -38,13 +36,18 @@ import javax.activation.*;
  * Servlet implementation class AddStoreController
  */
 
-public class AddStoreManager extends HttpServlet {
+public class AddStoreManagerController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private ServicesDao serviceDao;
+	private String host;
+    private String port;
+    private String user;
+    private String pass;
+ 
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public AddStoreManager() {
+    public AddStoreManagerController() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -52,6 +55,10 @@ public class AddStoreManager extends HttpServlet {
     public void init(ServletConfig config) throws ServletException {
   		super.init(config);
   		ServletContext context = getServletContext();
+  		 host = context.getInitParameter("host");
+         port = context.getInitParameter("port");
+         user = context.getInitParameter("user");
+         pass = context.getInitParameter("pass");
   		ServicesDaoFactory factory = ServicesDaoFactory.getInstance(context.getInitParameter("environment"));
   		 serviceDao = factory.createServiceDao();
   	}
@@ -77,10 +84,15 @@ public class AddStoreManager extends HttpServlet {
 	   protected void processRequest(HttpServletRequest request, HttpServletResponse response)
 	            throws ServletException, IOException {
 	        response.setContentType("text/html;charset=UTF-8");
+	        PrintWriter out = response.getWriter();
 	        try  {
-	            
+	        	HttpSession session=request.getSession(false);  
+		          if(session!=null){  
+		              String username=(String)session.getAttribute("username");  
+		                
+		              //out.print("Hello, "+username); 
 	           System.out.println("inside add storemanager controller");
-	           PrintWriter out = response.getWriter();
+	       
 	           RequestDispatcher rd = null;
 	           String store_id = request.getParameter("store_id");
 	           String manager_username = request.getParameter("username");
@@ -97,48 +109,20 @@ public class AddStoreManager extends HttpServlet {
 	                 
 	                 int flag = serviceDao.AddStoreManager(s);
 	                 if (flag == 0)
-	                 {   String to = manager_email;
-	                 
-	                 // Sender's email ID needs to be mentioned
-	                 String from = "sonalkaulkar@gmail.com";
-	            
-	                 // Assuming you are sending email from localhost
-	                 String host = "localhost";
-	            
-	                 // Get system properties
-	                 Properties properties = System.getProperties();
-	            
-	                 // Setup mail server
-	                 properties.setProperty("mail.smtp.host", host);
-	                 properties.setProperty("mail.smtp.port", "8080");
-
-	                 // Get the default Session object.
-	                 Session session = Session.getDefaultInstance(properties);
-	                 
-	           	  // Set response content type
-	                 response.setContentType("text/html");
-	                // PrintWriter out = response.getWriter();
-
-	                 try{
-	                    // Create a default MimeMessage object.
-	                    MimeMessage message = new MimeMessage(session);
-	                    // Set From: header field of the header.
-	                    message.setFrom(new InternetAddress(from));
-	                    // Set To: header field of the header.
-	                    message.addRecipient(Message.RecipientType.TO,
-	                                             new InternetAddress(to));
-	                    // Set Subject: header field
-	                    message.setSubject("Registered as store manager");
-	                    // Now set the actual message
-	                    message.setText("Your username is "+manager_username+"and password is the same");
-	                    // Send message
-	                    Transport.send(message);
-	                    String title = "Send Email";
-	                    String res = "Sent message successfully....";
-	                    
-	                 }catch (MessagingException mex) {
-	                    mex.printStackTrace();
-	                 }
+	                 {   String recipient  = manager_email;
+	                     String subject = "Registered as store manager";
+	                     String content = "Your username is Str"+manager_username+" and password is the same";
+	                     String resultMessage = "";
+	                    try{
+	                     EmailUtility.sendEmail(host, port, user, pass, recipient, subject,
+	                             content);
+	                     resultMessage = "The e-mail was sent successfully";
+	                     System.out.println(resultMessage);
+	                 } catch (Exception ex) {
+	                     ex.printStackTrace();
+	                     resultMessage = "There were an error: " + ex.getMessage();
+	                     System.out.println(resultMessage);
+	                 } 
 	                	 String str = "Registration Successful";
 	                	 System.out.println(str);
 		                 request.setAttribute("msg", str);//has to be deleted after adding this message in jsp page
@@ -146,7 +130,7 @@ public class AddStoreManager extends HttpServlet {
 		                 rd.include(request, response); 
               
 	                 }
-	                   if (flag == 2)
+	                 if (flag == 2)
 	                 	{
 	                	 String str = "Email-id already registered";
 	                	 request.setAttribute("msg", str);//has to be deleted after adding this message in jsp page
@@ -163,7 +147,10 @@ public class AddStoreManager extends HttpServlet {
 	                 }
 	                 
 	                           
-	    }  catch (Exception ex) {
+	    }   else{  
+            out.print("Please login first");  
+            request.getRequestDispatcher("InitialPage.jsp").include(request, response);  
+        }}catch (Exception ex) {
 	    	System.out.println("Exception in addtech controller");
 	    	ex.printStackTrace();
 	       }

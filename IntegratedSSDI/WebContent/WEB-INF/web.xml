@@ -2,8 +2,7 @@
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd" id="WebApp_ID" version="3.1">
   <display-name>trail</display-name>
   <welcome-file-list>
-    
-     <welcome-file>InitialPage.jsp</welcome-file>
+    <welcome-file>InitialPage.jsp</welcome-file>
   </welcome-file-list>
   <servlet>
     <servlet-name>logincontroller</servlet-name>
@@ -16,6 +15,22 @@
   <context-param>
     <param-name>environment</param-name>
     <param-value>production</param-value>
+  </context-param>
+  <context-param>
+    <param-name>host</param-name>
+    <param-value>smtp.gmail.com</param-value>
+  </context-param>
+  <context-param>
+    <param-name>port</param-name>
+    <param-value>587</param-value>
+  </context-param>
+  <context-param>
+    <param-name>user</param-name>
+    <param-value>ssdiproj123@gmail.com</param-value>
+  </context-param>
+  <context-param>
+    <param-name>pass</param-name>
+    <param-value>sss123!!</param-value>
   </context-param>
   <servlet>
     <servlet-name>addStoreController</servlet-name>
@@ -73,7 +88,7 @@
     <servlet-name>loadstoremanagercontroller</servlet-name>
     <url-pattern>/loadstoremanagercontroller</url-pattern>
   </servlet-mapping>
-    <servlet>
+  <servlet>
     <servlet-name>addTechController</servlet-name>
     <servlet-class>controller.AddTechController</servlet-class>
   </servlet>
@@ -81,9 +96,9 @@
     <servlet-name>addTechController</servlet-name>
     <url-pattern>/addTechController</url-pattern>
   </servlet-mapping>
-    <servlet>
+  <servlet>
     <servlet-name>addDelController</servlet-name>
-    <servlet-class>controller.AddDeliveryStaff</servlet-class>
+    <servlet-class>controller.AddDeliveryStaffController</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>addDelController</servlet-name>
@@ -97,5 +112,116 @@
     <servlet-name>resetpasswordcontroller</servlet-name>
     <url-pattern>/resetpasswordcontroller</url-pattern>
   </servlet-mapping>
-  
+  <servlet>
+    <servlet-name>addproductcontroller</servlet-name>
+    <servlet-class>controller.AddProductController</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>addproductcontroller</servlet-name>
+    <url-pattern>/addProductController</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>logoutcontroller</servlet-name>
+    <servlet-class>controller.LogoutController</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>logoutcontroller</servlet-name>
+    <url-pattern>/logoutcontroller</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>registrationcontroller</servlet-name>
+    <servlet-class>controller.RegistrationController</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>registrationcontroller</servlet-name>
+    <url-pattern>/registrationController</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>manageprofilecontroller</servlet-name>
+    <servlet-class>controller.ManageProfileController</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>manageprofilecontroller</servlet-name>
+    <url-pattern>/manageprofilecontroller</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>loadprofilecontroller</servlet-name>
+    <servlet-class>controller.LoadProfileController</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>loadprofilecontroller</servlet-name>
+    <url-pattern>/loadprofilecontroller</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>viewtechnicianController</servlet-name>
+    <servlet-class>controller.ViewTechnicianController</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>viewtechnicianController</servlet-name>
+    <url-pattern>/viewtechniciancontroller</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>deletetechnicianController</servlet-name>
+    <servlet-class>controller.DeleteTechnicianController</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>deletetechnicianController</servlet-name>
+    <url-pattern>/deletetechniciancontroller</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>viewdeliveryController</servlet-name>
+    <servlet-class>controller.ViewDeliveryController</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>viewdeliveryController</servlet-name>
+    <url-pattern>/ViewDeliveryStaffController</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>deletedeliveryController</servlet-name>
+    <servlet-class>controller.DeleteDeliveryController</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>deletedeliveryController</servlet-name>
+    <url-pattern>/deletedeliverycontroller</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>viewHistoryController</servlet-name>
+    <servlet-class>controller.ViewHistoryController</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>viewHistoryController</servlet-name>
+    <url-pattern>/ViewHistoryController</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>searchController</servlet-name>
+    <servlet-class>controller.SearchController</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>searchController</servlet-name>
+    <url-pattern>/searchcontroller</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>newrequestController</servlet-name>
+    <servlet-class>controller.NewRequestController</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>newrequestController</servlet-name>
+    <url-pattern>/newrequestcontroller</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>viewPickupController</servlet-name>
+    <servlet-class>controller.ViewPickUpController</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>viewPickupController</servlet-name>
+    <url-pattern>/viewpickupcontroller</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>viewstoreorderController</servlet-name>
+    <servlet-class>controller.ViewStoreOrderController</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>viewstoreorderController</servlet-name>
+    <url-pattern>/ViewStoreordersController</url-pattern>
+  </servlet-mapping>
 </web-app>

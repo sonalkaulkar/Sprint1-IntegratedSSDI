@@ -62,11 +62,13 @@ public class  UpdateStoreController extends HttpServlet {
 	   protected void processRequest(HttpServletRequest request, HttpServletResponse response)
 	            throws ServletException, IOException {
 	        response.setContentType("text/html;charset=UTF-8");
+	        PrintWriter out = response.getWriter();
+
 	        try  {
 	            /* TODO output your page here. You may use following sample code. */
 	     //     List errorMsgs = new  LinkedList();
 	        	
-	          PrintWriter out = response.getWriter();
+//	          PrintWriter out = response.getWriter();
 	           String store_id = request.getParameter("storeId");
 	           String store_name = request.getParameter("StoreName");
 	           String store_loc = request.getParameter("StoreLocation");
@@ -80,7 +82,7 @@ public class  UpdateStoreController extends HttpServlet {
 	                 int flag = serviceDao.updateStore(store);
 	                 RequestDispatcher rd = null;
 	                 if (flag != 0)
-	                 {
+	                 {    request.setAttribute("store_id",store_id);
 	                	 String str = "Store "+store_id+" not updated Successfully";
 		                 request.setAttribute("msg", str);
 	                 rd=request.getRequestDispatcher("/UpdateStore.jsp");  
@@ -90,15 +92,22 @@ public class  UpdateStoreController extends HttpServlet {
 	                 if (flag == 0)
 	                 {  String str = "Store "+store_id+" updated  Successfully";
 	                 request.setAttribute("msg", str);
+	                 request.setAttribute("store_id",store_id);
 	                 rd=request.getRequestDispatcher("/UpdateStore.jsp");
 	                 rd.include(request, response);  
 	                 }
 	                 
 	                
 	                 
-	            
+
+	                 else{  
+	                            out.print("Please login first");  
+	                            request.getRequestDispatcher("InitialPage.jsp").include(request, response);  
+	                        }
+
 	           
-	    }  catch (Exception ex) {
+	    }
+	        catch (Exception ex) {
 	    	ex.printStackTrace();
 	       }
 	    }

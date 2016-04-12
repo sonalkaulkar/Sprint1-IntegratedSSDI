@@ -25,13 +25,22 @@
           alert("Please provide the phone number");
          return false;         
          }
-
+         var reg = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/; 
+         var OK = reg.exec(x);  
+         if (!OK)  
+         {  alert("Enter a valid phone number "); return false;} 
+         
          var x = document.forms["ManagerDetails"]["manager_email_id"].value;
          if (x == null || x == "") {
           alert("Please provide the email-id");
          return false;         
          }
-
+         var atpos = x.indexOf("@");
+         var dotpos = x.lastIndexOf(".");
+         if (atpos<1 || dotpos<atpos+2 || dotpos+2>=x.length) {
+             alert("Enter a valid e-mail address");
+             return false;
+         }
         }
         </script>
 <link rel="stylesheet" type="text/css" href="style.css" media="screen" />
@@ -51,7 +60,7 @@
   </div>
   
   <div id="main">
-     <form  name = "ManagerDetails" onsubmit = "return validateForm()" method = "post" action="addstoremanagercontroller">
+          <form  name = "ManagerDetails" onsubmit = "return validateForm()" method = "post" action="addstoremanagercontroller">
        <%Store s = (Store) request.getAttribute("storedet"); %>
        <input type="hidden" name="store_id" value="<%=s.getStoreId() %>" />
            <table align="center" >
@@ -88,17 +97,29 @@
 
   <div id="left">
     <div class="pad">
-      <br /><br />
-    <a href="AddStore.jsp"><button style="height:30px; width: 90px">ADD STORE</button></a>
-    <br /><br /><br />
-     <form method = "post" action="viewStoresController">
-      <input type="submit" value="Manage Store" /></form>
+ <br />	 
+	  <a href="AddStore.jsp"><button style="height:30px; width: 100px">Add Store</button></a>
     <br /><br />
-  
+      	
+      <!--  <button style="color:blue;border-radius:10px;height:30px; width: 150px">-->
+      <form method = "post" action="viewStoresController">
+      <input type="submit" value="Manage Store" /></form>
+      
+    <br /><br />
+ 	<a href="ResetPassword.jsp"><button style="height:30px; width: 150px">Reset Password</button></a>
   </div>
+  <br />
 </div>
+
 <div id="footer">
-    <div id="r"> &copy; Copyright 2016, Your Website - <a href="AdminHome.jsp">Home</a> - <a href="InitialPage.jsp">Logout</a><br />
+     <div id="r"> &copy; Copyright 2016, Your Website - <label> <%
+      if(session!=null){  
+        String username=(String)session.getAttribute("username");  
+          
+       out.print("Hello, "+username);
+       
+        }  
+      %></label><a href="AdminHome.jsp"> - Home</a> - <a href="logoutcontroller">Logout</a><br />
       Design: SSDI project1</div>
     <div id="l">Contact us: Office-000-000-0000 </div>
   </div>

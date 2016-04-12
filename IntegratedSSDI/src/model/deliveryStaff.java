@@ -11,11 +11,13 @@ public String delivery_email_id;
 public String delivery_phone_no;
 public String store_Id;
 public String delivery_add;
+public int  no_of_orders;
 public deliveryStaff() {
 	// TODO Auto-generated constructor stub
 }
+
 public deliveryStaff(String deliveryId,String deliveryName,String location,String delivery_email_id,
-		String delivery_phone_no,String store_Id,String delivery_add)
+		String delivery_phone_no,String store_Id,String delivery_add,int no_of_orders)
 {
 this.deliveryId=deliveryId;
 this.deliveryName=deliveryName;
@@ -24,8 +26,23 @@ this.delivery_email_id=delivery_email_id;
 this.delivery_phone_no=delivery_phone_no;
 this.store_Id=store_Id;
 this.delivery_add=delivery_add;
+this.no_of_orders = no_of_orders;
 }
 
+
+
+public deliveryStaff(String del_id)
+{
+	
+	deliveryId = del_id;
+}
+public int  getNo_of_orders() {
+	return no_of_orders;
+}
+
+ public void setNo_of_orders(int  no_of_orders) {
+	this.no_of_orders = no_of_orders;
+}
  public String getDelivery_add() {
 	return delivery_add;
 }
@@ -70,7 +87,7 @@ this.delivery_add=delivery_add;
 }
  public RequestDispatcher directUser(HttpServletRequest request) {
 		// TODO Auto-generated method stub
-	    RequestDispatcher r = request.getRequestDispatcher("/deliveryStaffhome.jsp") ;
+	    RequestDispatcher r = request.getRequestDispatcher("/DeliveryStaffHome.jsp") ;
 	    return r;
 	}
 }

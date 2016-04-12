@@ -11,6 +11,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import model.Login;
 import model.ServicesDao;
@@ -26,11 +27,22 @@ import model.UserFactory;
 public class AddStoreController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private ServicesDao serviceDao;
+	   private  RequestDispatcher rd = null;
+	    private HttpSession session = null;
     /**
      * @see HttpServlet#HttpServlet()
      */
     public AddStoreController() {
         super();
+        // TODO Auto-generated constructor stub
+    }
+    
+    public AddStoreController(ServicesDao s,RequestDispatcher rd,HttpSession sess) {
+        super();
+        serviceDao = s;
+        this.rd = rd;
+        session = sess;
+        
         // TODO Auto-generated constructor stub
     }
 
@@ -44,7 +56,7 @@ public class AddStoreController extends HttpServlet {
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		 processRequest(request, response);
 		
@@ -62,11 +74,16 @@ public class AddStoreController extends HttpServlet {
 	   protected void processRequest(HttpServletRequest request, HttpServletResponse response)
 	            throws ServletException, IOException {
 	        response.setContentType("text/html;charset=UTF-8");
+	        PrintWriter out = response.getWriter();
 	        try  {
 	            /* TODO output your page here. You may use following sample code. */
 	     //     List errorMsgs = new  LinkedList();
-	        	
-	          PrintWriter out = response.getWriter();
+	        	if(session == null){session=request.getSession(false);}  
+		          if(session!=null){  
+		              String username=(String)session.getAttribute("username");  
+		                
+		             // out.print("Hello, "+username); 
+	         
 	           String store_id = request.getParameter("store_id");
 	           String store_name = request.getParameter("Store_Name");
 	           String store_loc = request.getParameter("location");
@@ -78,7 +95,7 @@ public class AddStoreController extends HttpServlet {
 	                
 	                 System.out.println("inside");
 	                 int flag = serviceDao.addStore(store);
-	                 RequestDispatcher rd = null;
+	                 //RequestDispatcher rd = null;
 	                 if (flag != 0)
 	                 {String str = "Store not added successfully ";
 	                 request.setAttribute("msg",str); 
@@ -89,17 +106,25 @@ public class AddStoreController extends HttpServlet {
 	                 }
 	                 if (flag == 0)
 	                 {  //out.print("Store added Successfully");
+	                	 
 	                	 String str = " New Store added successfully ";
-		                 request.setAttribute("msg",str); 
-	                 rd=request.getRequestDispatcher("/StoreAdded.jsp");
-	                 rd.include(request, response);  
+		                 request.setAttribute("msg",str);
+		                 request.setAttribute("store_id",store_id);
+		                 if(rd == null)
+		                 {
+		                	 rd=request.getRequestDispatcher("/StoreAdded.jsp");
+		                	 rd.include(request, response);
+		                 }
 	                 }
 	                 
 	                
 	                 
 	            
 	           
-	    }  catch (Exception ex) {
+	    }  else{  
+            out.print("Please login first");  
+            request.getRequestDispatcher("InitialPage.jsp").include(request, response);  
+        } }catch (Exception ex) {
 	    	ex.printStackTrace();
 	       }
 	    }

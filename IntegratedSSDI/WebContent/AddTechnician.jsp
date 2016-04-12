@@ -1,3 +1,5 @@
+<%@ page import ="java.sql.*" %>
+<%@ page import ="javax.sql.*" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -6,7 +8,7 @@
 <script>
         function validateForm () {
          
-         var x = document.forms["AddTechnician"]["username"].value;
+         var x = document.forms["AddTechnician"]["username1"].value;
          if (x == null || x == "") {
           alert("Please provide the Username");
          return false;         
@@ -29,12 +31,21 @@
           alert("Please provide the email-id");
          return false;         
          }
-
+         var atpos = x.indexOf("@");
+         var dotpos = x.lastIndexOf(".");
+         if (atpos<1 || dotpos<atpos+2 || dotpos+2>=x.length) {
+             alert("Enter a valid e-mail address");
+             return false;
+         }
          var x = document.forms["AddTechnician"]["tech_phone_no"].value;
          if (x == null || x == "") {
           alert("Please provide the phone number");
          return false;         
          }
+         var reg = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/; 
+         var OK = reg.exec(x);  
+         if (!OK)  
+         {  alert("Enter a valid phone number "); return false;} 
          
     	 var x = document.forms["AddTechnician"]["store_id"].value;
          if (x == null || x == "") {
@@ -61,18 +72,30 @@
   </div>
   
   <div id="main">
+     
      <form  name = "AddTechnician" onsubmit = "return validateForm()" method = "post" action="addTechController">
        
            <table align="center" >
                <center><h1>ADD TECHNICIAN</h1></center>
                <tr>
                <td>USER NAME:</td>
-               <td><input type="text" name="username" value="" /></td>
+               <td><input type="text" name="username1" value="" /></td>
                </tr><td></td><td></td>
                <tr>
                <tr>
                <td>ID:</td>
-               <td><input type="text" name="techId" value="" /></td>
+              
+                <% int techid = 0;
+Class.forName("com.mysql.jdbc.Driver"); 
+java.sql.Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/ssdi","root","UnccSonal11"); 
+Statement st= con.createStatement(); 
+ResultSet rs=st.executeQuery("select max(techId) from technician");
+while (rs.next())
+{    techid = rs.getInt(1);
+	 techid += 1;
+	}
+out.print("<td><input type='text' name='techId' value='"+techid+"' /></td>");
+%>
                </tr><td></td><td></td>
                <tr>
                    <td>NAME:</td>
@@ -87,12 +110,12 @@
                <td>PHONE NO:</td>
                <td><input type="text" name="tech_phone_no" value="" /></td>
                </tr><td></td><td></td>
-               <tr>
-               <td>STORE ID:</td>
+              <!-- <tr>
+                <td>STORE ID:</td>
                <td><input type="text" name="store_id" value="" /></td>
                </tr><td></td><td></td>
                <tr>
-                 
+                 -->
                <td></td><td></td>
                               
                
@@ -105,19 +128,36 @@
 
   <div id="left">
     <div class="pad">
-      <br /><br />
-    <a href="AddTechnician.jsp"><button style="color:blue;border-radius:10px; height:30px; width: 135px">ADD TECHNICIAN</button></a>
+    <br />
+   <a href="AddTechnician.jsp"><button>ADD TECHNICIAN</button></a>
     <br /><br />
-      <a href="DeleteTechnician.jsp"><button style="color:blue;border-radius:10px;height:30px; width: 150px">DELETE TECHNICIAN</button></a>
+      <form method = "post" action="viewtechniciancontroller">
+      <input type="submit" value="DELETE TECHNICIAN" /></form>
+    <br />
+    <a href="AddDeliverystaff.jsp"><button>ADD DELIVERY STAFF</button></a>
     <br /><br />
-    <a href="AddDeliverystaff.jsp"><button style="color:blue;border-radius:10px; height:30px; width: 160px">ADD DELIVERY STAFF</button></a>
-    <br /><br />
-      <a href="DeleteDeliveryStaff.jsp"><button style="color:blue;border-radius:10px;height:30px; width: 180px">DELETE DELIVERY STAFF</button></a>
-    <br /><br />
+       <form method = "post" action="ViewDeliveryStaffController">
+      <input type="submit" value="DELETE DELIVERY STAFF" /></form>
+    <br />
+    <a href="ResetPassword.jsp"><button ">CHANGE PASSWORD</button></a>
+    <br /><br/>
+       <form method = "post" action="ViewStoreordersController">
+      <input type="submit" value="MONITOR ORDERS" /></form>
+    <br /><br />  
+    
   </div>
+ 
 </div>
+
 <div id="footer">
-    <div id="r"> &copy; Copyright 2016, Your Website - <a href="StrManagerHome.jsp">Home</a> - <a href="InitialPage.jsp">Logout</a><br />
+     <div id="r"> &copy; Copyright 2016, Your Website - <label> <%
+      if(session!=null){  
+        String username=(String)session.getAttribute("username");  
+          
+       out.print("Hello, "+username);
+       
+        }  
+      %></label><a href="StrManagerHome.jsp"> - Home</a> - <a href="logoutcontroller">Logout</a><br />
       Design: SSDI project1</div>
     <div id="l">Contact us: Office-000-000-0000 </div>
   </div>

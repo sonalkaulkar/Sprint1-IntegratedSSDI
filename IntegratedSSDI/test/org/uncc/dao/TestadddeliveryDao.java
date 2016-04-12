@@ -66,10 +66,10 @@ public class TestadddeliveryDao {
 		
 		/* Invoke function under test */
 		deliveryStaff DS = new deliveryStaff("123","Niel","jammu","niel@test.com",
-				"7040001254","12345678","Jammu and Kashmir");
-		Login l = new Login ("1234","1234");
+				"7040001254","1","Jammu and Kashmir",0);
+		Login l = new Login ("1234","1234",0);
 		try {
-			serviceDao.addDeliveryStaff(DS,l);
+			serviceDao.addDeliveryStaff(DS,l,"1234");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -85,7 +85,7 @@ public class TestadddeliveryDao {
 			assertEquals(resultSet.getString("location"), "jammu");
 			assertEquals(resultSet.getString("delivery_email_id"), "niel@test.com");
 			assertEquals(resultSet.getString("delivery_phone_no"), "7040001254");
-			assertEquals(resultSet.getString("store_id"), "12345678");	
+			assertEquals(resultSet.getString("store_id"), "1");	
 			assertEquals(resultSet.getString("delivery_add"), "Jammu and Kashmir");
 		
 			statement = connection.createStatement();

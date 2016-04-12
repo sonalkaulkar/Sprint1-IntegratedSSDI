@@ -72,9 +72,9 @@ public class TestaddtechnicianDao {
 		technician T = new technician("12345678","Adam","free",5,"adam@teststore.com",
 				"7040000000","1234",ts);
 		
-		Login l = new Login("Adam11","Adam11");
+		Login l = new Login("Adam11","Adam11",0);
 		try {
-			serviceDao.addTechnician(T, l);
+			serviceDao.addTechnician(T, l,"Adam11");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

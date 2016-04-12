@@ -60,7 +60,7 @@ public Customer() {
 }
 public RequestDispatcher directUser(HttpServletRequest request) {
 	// TODO Auto-generated method stub
-    RequestDispatcher r = request.getRequestDispatcher("/Customerhome.jsp") ;
+    RequestDispatcher r = request.getRequestDispatcher("/CustomerHome.jsp") ;
     return r;
 }
 }

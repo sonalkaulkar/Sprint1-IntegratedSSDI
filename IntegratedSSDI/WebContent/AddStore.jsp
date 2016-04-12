@@ -1,3 +1,7 @@
+<%@ page import ="java.sql.*" %>
+<%@ page import ="javax.sql.*" %>
+
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -30,11 +34,23 @@
          return false;         
          }
 
+         var reg = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/; 
+         var OK = reg.exec(x);  
+         if (!OK)  
+         {  alert("Enter a valid phone number "); return false;}  
+         
 	 var x = document.forms["AddStore"]["email-id"].value;
          if (x == null || x == "") {
           alert("Please provide the Store email-id");
          return false;         
          }                 
+         var atpos = x.indexOf("@");
+         var dotpos = x.lastIndexOf(".");
+         if (atpos<1 || dotpos<atpos+2 || dotpos+2>=x.length) {
+             alert("Enter a valid e-mail address");
+             return false;
+         }
+         
         }
         </script>
 <link rel="stylesheet" type="text/css" href="style.css" media="screen" />
@@ -54,13 +70,33 @@
   </div>
   
   <div id="main">
+     <%
+      if(session!=null){  
+        String username=(String)session.getAttribute("username");  
+          
+    //    out.print("Hello, "+username);  
+        }  
+      %>
     <form  name = "AddStore" onsubmit = "return validateForm()" method = "post" action="addstoreController">
        
            <table align="center" >
                <center><h1>ADD STORE</h1></center>
                <tr>
+               <br></br>
                <td>ID:</td>
-               <td><input type="text" name="store_id" value="" /></td>
+               <% int storeid = 0;
+Class.forName("com.mysql.jdbc.Driver"); 
+java.sql.Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/ssdi","root","UnccSonal11"); 
+Statement st= con.createStatement(); 
+ResultSet rs=st.executeQuery("select max(storeId)  from store");
+while (rs.next())
+{    storeid = rs.getInt(1);
+	 storeid += 1;
+	}
+out.print("<td><input type='text' name='store_id' value='"+storeid+"' /></td>");
+%>
+               
+               
                </tr><td></td><td></td>
                <tr>
                    <td>NAME:</td>
@@ -89,6 +125,7 @@
                
            </tr>
            </table>
+           <br></br>
            <td><center><input type="submit" value="ADD" /></td></center>
 </form>
   </div>
@@ -104,17 +141,20 @@
       <input type="submit" value="Manage Store" /></form>
       
     <br /><br />
-    <br /><br />
-    <br /><br />
-    <br /><br />
-    <br /><br />
- 	
+ 	<a href="ResetPassword.jsp"><button style="height:30px; width: 150px">Reset Password</button></a>
   </div>
   <br />
 </div>
   
 <div id="footer">
-    <div id="r"> &copy; Copyright 2016, Your Website - <a href="AdminHome.jsp">Home</a> - <a href="InitialPage.jsp">Logout</a><br />
+     <div id="r"> &copy; Copyright 2016, Your Website - <label> <%
+      if(session!=null){  
+        String username=(String)session.getAttribute("username");  
+          
+       out.print("Hello, "+username);
+       
+        }  
+      %></label><a href="AdminHome.jsp"> - Home</a> - <a href="logoutcontroller">Logout</a><br />
       Design: SSDI project1</div>
     <div id="l">Contact us: Office-000-000-0000 </div>
   </div>

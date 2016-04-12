@@ -14,6 +14,9 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import com.sun.net.httpserver.spi.HttpServerProvider;
 
 
 /**
@@ -23,11 +26,26 @@ import javax.servlet.http.HttpServletResponse;
 public class logincontroller extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private ServicesDao serviceDao;
+	private  RequestDispatcher rd = null;
+	private  HttpSession session = null;
+	private int flag;
     /**
      * @see HttpServlet#HttpServlet()
      */
+    public logincontroller(ServicesDao s ,RequestDispatcher rd,HttpSession sess ) {
+        super();
+        serviceDao = s;
+        this.rd = rd;
+        session = sess;
+        // TODO Auto-generated constructor stub
+        
+    }
+    
     public logincontroller() {
         super();
+     //   serviceDao = s;
+       // this.rd = rd;
+        //session = sess;
         // TODO Auto-generated constructor stub
         
     }
@@ -43,7 +61,7 @@ public class logincontroller extends HttpServlet {
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		 processRequest(request, response);
 	}
@@ -51,7 +69,7 @@ public class logincontroller extends HttpServlet {
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		  processRequest(request, response);
 	}
@@ -63,40 +81,46 @@ public class logincontroller extends HttpServlet {
 	            /* TODO output your page here. You may use following sample code. */
 	     //     List errorMsgs = new  LinkedList();
 	        	
-	          PrintWriter out = response.getWriter();
+	           PrintWriter out = response.getWriter();
 	           String username = request.getParameter("username");
 	           String password = request.getParameter("password");
-	         	
-	                 Login l = new Login(username, password);
-	                
+	           System.out.println("up "+username+"pass "+password);
+	                 Login l = new Login(username, password,0);
+	                 System.out.println("l.u"+l.getUsername());
+	                 System.out.println("l.u"+l.getPassword());
 	                 System.out.println("inside login controller");
-	                 int flag = serviceDao.checkLogin(l);
-	                 RequestDispatcher rd = null;
+	                  flag = serviceDao.checkLogin(l);
+	                 System.out.println("flag "+flag);
 	                 if (flag != 0)
 	                 {
 	                	 System.out.println(" not found");
 	           	  //out.print("Invalid Username or password ");
 	                	 request.setAttribute("msg", "Invalid Username or Password");
-	           	 rd = request.getRequestDispatcher("/index1.jsp") ;
-	           	rd.include(request, response); 
+	                	 
+	                	 {
+	                		 rd = request.getRequestDispatcher("/index1.jsp") ;
+	           	 
+	                		 rd.include(request, response); 
                          //      errorMsgs.clear();
            //  errorMsgs.add("Username already taken");
              //request.getSession().setAttribute("error",errorMsgs);
              
-             
+	                	 }
 	                 }
 	                 if (flag == 0)
 	                 {  System.out.println("found");
-	                // errorMsgs.clear();
-	                 //request.setAttribute("ErrorMsgs",errorMsgs);
-	                
-	                 
-	                 request.setAttribute("msg", "");
+	                 //if(session == null)
+	                	 
+	                 session =request.getSession();  
+	                 session.setAttribute("username",username);  
+	                 request.setAttribute("msg", "Valid Username & Password");
 	                 UserFactory uf = new UserFactory();
 	                 User u = uf.getUser(username.substring(0, 3));
+	              
 	                 rd =   u.directUser(request);
 	                 rd.include(request, response);  
-	                 }
+	                 
+	                }
 	                 
 	                
 	                 

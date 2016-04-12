@@ -1,16 +1,24 @@
 package model;
 
 public class Login {
-String username ,password;
+String username ,password; 
+int roleid;
 public Login() {
 	// TODO Auto-generated constructor stub
 }
 
-public Login(String user ,String pass)
+public Login(String user ,String pass, int roleid)
 {
 	username = user ;
 	password = pass;
+	this.roleid = roleid;
 	
+}
+public int getRoleid() {
+	return roleid;
+}
+public void setRoleid(int roleid) {
+	this.roleid = roleid;
 }
 public String getPassword() {
 	return password;

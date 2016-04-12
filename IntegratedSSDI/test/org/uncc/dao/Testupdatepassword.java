@@ -64,7 +64,7 @@ public class Testupdatepassword {
 		}
 		
 		/* Invoke function under test */
-	Login L=new Login("testusername","testp");
+	Login L=new Login("testusername","testp",0);
 		try {
 			serviceDao.updatePassword(L,"NEWtest");
 		} catch (Exception e) {
