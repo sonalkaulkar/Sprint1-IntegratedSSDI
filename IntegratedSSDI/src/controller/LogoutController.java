@@ -50,7 +50,7 @@ public class LogoutController extends HttpServlet {
 
         	 {session.invalidate();  
            
-         out.print("You are successfully logged out!");     
+        // out.print("You are successfully logged out!");     
          request.getRequestDispatcher("/InitialPage.jsp").include(request, response);  
         	 }
         

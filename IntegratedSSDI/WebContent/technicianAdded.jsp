@@ -42,10 +42,7 @@
     <br /><br/>
        <form method = "post" action="ViewStoreordersController">
       <input type="submit" value="MONITOR ORDERS" /></form>
-    <br /><br />  
-    <form method = "post" action="ViewStoreordersController">
-      <input type="submit" value="MONITOR ORDERS" /></form>
-    <br /><br />
+    <br />
     <a href="TransferOrdersTo.jsp"><button>TRANSFER ORDERS</button></a>
     <br /><br />  
     

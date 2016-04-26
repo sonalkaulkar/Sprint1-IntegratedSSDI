@@ -28,6 +28,7 @@
              
                    <center>
                <h1>Order List</h1>
+               </br>
                <div style="height:200px; overflow:auto">
                <table>
               
@@ -96,7 +97,7 @@
        <form method = "post" action="ViewStoreordersController">
       <input type="submit" value="MONITOR ORDERS" /></form>
     
-    <br /><br />
+    <br />
     <a href="TransferOrdersTo.jsp"><button>TRANSFER ORDERS</button></a>
     <br /><br />  
     

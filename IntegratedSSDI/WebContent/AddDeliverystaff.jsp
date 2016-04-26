@@ -171,12 +171,13 @@ out.print("<td><input type='text' name='deliveryId' value='"+delid+"'  readonly/
     <br /><br/>
        <form method = "post" action="ViewStoreordersController">
       <input type="submit" value="MONITOR ORDERS" /></form>
+    <br />
+    <a href="TransferOrdersTo.jsp"><button>TRANSFER ORDERS</button></a>
     <br /><br />  
     
   </div>
  
 </div>
-
 <div id="footer">
      <div id="r"> &copy; Copyright 2016, Your Website - <label> <%
       if(session!=null){  

@@ -46,7 +46,7 @@ $(".slidingDiv").slideToggle();
              
                    <center>
                <h1>ORDERS TO BE SERVICED</h1>
-               <br></br>
+               </br>
            <div style="height:200px; overflow:auto"> 
                <table>
             
@@ -99,6 +99,7 @@ $(".slidingDiv").slideToggle();
           <tr><td>Select Order to update status:</td>
           
           
+          
               
               
                
@@ -145,18 +146,20 @@ String query = "select roleid from login where username = ?";
         }
 %>
 
-           <tr>
-           <td><center></center><input type="submit" name="update" value="UPDATE"   onclick="form.action='TechnicianUpdateOrderController';"/></td>
            </tr></table>
-              
-</div>                            
+               <table> <tr>   
+               </br>
+                 
+    				<td><input type="submit" name="Update" value="UPDATE"  onclick="form.action='TechnicianUpdateOrderController';"/></td>
+    			
+    				</tr>
+           </table>         
            </center>
                    
        </form>
        <br />
   <center> <a href = "TechnicianHome.jsp"><button>CANCEL</button></a></center>
-  </div>
-         
+  </div>       
   
 <div id="left">
     <div class="pad">
