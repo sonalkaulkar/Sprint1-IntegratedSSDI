@@ -50,7 +50,7 @@
   </servlet-mapping>
   <servlet>
     <servlet-name>addStoreManagerController</servlet-name>
-    <servlet-class>controller.AddStoreManager</servlet-class>
+    <servlet-class>controller.AddStoreManagerController</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>addStoreManagerController</servlet-name>
@@ -224,4 +224,52 @@
     <servlet-name>viewstoreorderController</servlet-name>
     <url-pattern>/ViewStoreordersController</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <servlet-name>updatestatuspickupController</servlet-name>
+    <servlet-class>controller.UpdatePickUpStatusController</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>updatestatuspickupController</servlet-name>
+    <url-pattern>/UpdateStatusPickUp</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>viewDeliveredController</servlet-name>
+    <servlet-class>controller.ViewDeliveredController</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>viewDeliveredController</servlet-name>
+    <url-pattern>/viewdeliveredcontroller</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>updatestatusclosedController</servlet-name>
+    <servlet-class>controller.UpdateClosedController</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>updatestatusclosedController</servlet-name>
+    <url-pattern>/UpdateStatusClosed</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>assignDeliveryController</servlet-name>
+    <servlet-class>controller.AssignDeliveryController</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>assignDeliveryController</servlet-name>
+    <url-pattern>/AssignDeliveryController</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>techViewOrdersController</servlet-name>
+    <servlet-class>controller.TechViewOrdersController</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>techViewOrdersController</servlet-name>
+    <url-pattern>/TechnicianViewOrdersController</url-pattern>
+  </servlet-mapping>
+<servlet>
+    <servlet-name>techUpdateOrderController</servlet-name>
+    <servlet-class>controller.TechUpdateOrderController</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>techUpdateOrderController</servlet-name>
+    <url-pattern>/TechnicianUpdateOrderController</url-pattern>
+  </servlet-mapping>  
 </web-app>

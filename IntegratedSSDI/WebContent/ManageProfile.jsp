@@ -1,5 +1,5 @@
 
-<%@page import="model.Customer"%>
+<%@page import="model.orderObserve.Observer.Customer"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -120,6 +120,8 @@
            </table>
            <td><center><input type="submit" value="SUBMIT" /></td></center>
 </form>
+<br />
+  <center> <a href = "CustomerHome.jsp"><button>CANCEL</button></a></center>
   </div>
 
   <div id="left">
@@ -130,7 +132,7 @@
       <form method = "post" action="ViewHistoryController">
       <input type="submit" value="VIEW HISTORY" /></form>
     <br />
-    <a href="ResetPassword.jsp"><button ">RESET PASSWORD</button></a>
+    <a href="ResetPassword.jsp"><button ">CHANGE PASSWORD</button></a>
     <br /><br />
         <form method = "post" action="loadprofilecontroller">
       <input type="submit" value="MANAGE PROFILE" /></form>

@@ -4,6 +4,7 @@ import java.util.*;
 import java.util.logging.Logger;
 
 import model.*;
+import model.orderObserve.Observer.Customer;
 import sun.util.logging.PlatformLogger.Level;
 
 import javax.servlet.RequestDispatcher;
@@ -63,9 +64,9 @@ public class LoadProfileController extends HttpServlet {
 	        PrintWriter out = response.getWriter();
 	        try  {
 	        	HttpSession session=request.getSession(false);  
-		          if(session!=null){  
+		      
 		              String username=(String)session.getAttribute("username");  
-		                
+		              if(username!=null){  
 		            //  out.print("Hello, "+username); 
 	        	System.out.println("inside view stores controller");
 	            /* TODO output your page here. You may use following sample code. */

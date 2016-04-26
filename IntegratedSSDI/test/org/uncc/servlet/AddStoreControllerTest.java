@@ -108,6 +108,20 @@ public class AddStoreControllerTest extends Mockito {
                 return attributes.get(key);
             }
         });
+        
+        when(request.getRequestDispatcher(anyString())).thenAnswer(new Answer() {
+
+            /**
+             * @see org.mockito.stubbing.Answer#answer(org.mockito.invocation.InvocationOnMock)
+             */
+            @Override
+            public Object answer(InvocationOnMock aInvocation) throws Throwable {
+
+                
+
+                return rd;
+            }
+        });
 
         Mockito.doAnswer(new Answer() {
 
@@ -195,6 +209,30 @@ public class AddStoreControllerTest extends Mockito {
         assertEquals(" New Store added successfully ", message);
     }
 
+    @Test
+    public void testInvalidAddStore() throws ServletException, IOException {
+    	
+   	 when(serviceDao.addStore(anyObject())).thenReturn(1);
+       parameters.put("store_id", "1");
+       parameters.put("Store_Name", "abc");
+       parameters.put("location", "UT");
+       parameters.put("Address", "UTNORTH");
+       parameters.put("Phone", "8989898989");
+       parameters.put("email-id", "soanl@gmail.com");
+       ByteArrayOutputStream output = new ByteArrayOutputStream();
+		PrintWriter writer = new PrintWriter(new OutputStreamWriter(output));
+		when(response.getWriter()).thenReturn(writer);
+       servlet.doGet(request, response);
+
+       Object object = attributes.get("msg");
+
+      assertNotNull(object);
+        assertTrue(String.class.isAssignableFrom(object.getClass()));
+
+       String message = (String) object;
+       System.out.println(message);
+       assertEquals("Store not added successfully ", message);
+   }
     /**
      * Test method for
      * {@link SessionServlet#doGet(HttpServletRequest, HttpServletResponse)} .

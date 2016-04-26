@@ -66,9 +66,9 @@ public class LoadStoreManagerController extends HttpServlet {
 	            /* TODO output your page here. You may use following sample code. */
 	     //     List errorMsgs = new  LinkedList();
 	        	HttpSession session=request.getSession(false);  
-		          if(session!=null){  
+		          
 		              String username=(String)session.getAttribute("username");  
-		                
+		              if(username!=null){
 		              //out.print("Hello, "+username); 
 	        	 String store_id = request.getParameter("storeId");
 	        	 Store s = new Store(store_id);

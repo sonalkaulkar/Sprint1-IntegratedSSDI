@@ -25,6 +25,9 @@ import javax.servlet.http.HttpSession;
 public class ResetPasswordController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private ServicesDao serviceDao;
+
+    private  RequestDispatcher rd = null;
+    private HttpSession session = null;
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -32,6 +35,14 @@ public class ResetPasswordController extends HttpServlet {
         super();
         // TODO Auto-generated constructor stub
         
+    }
+    public ResetPasswordController(ServicesDao s,RequestDispatcher rd,HttpSession sess) {
+        super();
+        serviceDao = s;
+        this.rd = rd;
+        session = sess;
+        
+        // TODO Auto-generated constructor stub
     }
     
     public void init(ServletConfig config) throws ServletException {
@@ -45,7 +56,7 @@ public class ResetPasswordController extends HttpServlet {
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		 processRequest(request, response);
 	}
@@ -67,19 +78,37 @@ public class ResetPasswordController extends HttpServlet {
 	     //     List errorMsgs = new  LinkedList();
 	        	int flag;
 	        //  PrintWriter out = response.getWriter();
-	          HttpSession session=request.getSession(false);  
-	          if(session!=null){  
+	           session=request.getSession(false);  
+	          
 	              String username=(String)session.getAttribute("username");  
-	                
+	              if(username!=null){
 	              //out.print("Hello, "+username);  
 	              
 	           String old_password = request.getParameter("old_password");
 	           String new_password = request.getParameter("new_password");
 	           String confirm_password = request.getParameter("confirm_password");
-	           RequestDispatcher rd = null;    
+	          // RequestDispatcher rd = null;    
 	           
 	        	   Login l = new Login(username, old_password,0);
-	                
+	        	    if (old_password.equals(new_password))
+	         	    {
+	         	    	 String str = "Password cannot be same as before .Please enter a new password";
+		                 request.setAttribute("msg",str); 
+	         
+		           	 rd = request.getRequestDispatcher("/ResetPasswordFailure.jsp") ;
+		           	rd.include(request, response); 
+	         	    }
+	           if (!new_password.equals(confirm_password))
+	         		   
+	         	    {
+	         		  String str = "New and confirm password should match";
+		                 request.setAttribute("msg",str); 
+	         
+		           	 rd = request.getRequestDispatcher("/ResetPasswordFailure.jsp") ;
+		           	rd.include(request, response); 
+	         	    }
+	           else
+	           {
 	                 System.out.println("inside");
 	                 flag = serviceDao.updatePassword(l,new_password);
 	                System.out.println(flag);
@@ -109,24 +138,7 @@ public class ResetPasswordController extends HttpServlet {
 	                 }
 	                 
 	                
-	                 if (old_password.equals(new_password))
-		         	    {
-		         	    	 String str = "Password cannot be same as before .Please enter a new password";
-			                 request.setAttribute("msg",str); 
-		         
-			           	 rd = request.getRequestDispatcher("/ResetPasswordFailure.jsp") ;
-			           	rd.include(request, response); 
-		         	    }
-		           else if (!new_password.equals(confirm_password))
-		         		   
-		         	    {
-		         		  String str = "New and confirm password should match";
-			                 request.setAttribute("msg",str); 
-		         
-			           	 rd = request.getRequestDispatcher("/ResetPasswordFailure.jsp") ;
-			           	rd.include(request, response); 
-		         	    }
-		           
+	           } 
 	            
 	           
 	    }

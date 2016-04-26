@@ -1,4 +1,4 @@
-package org.uncc.util;
+package util.db.connection;
 
 
 
@@ -22,7 +22,7 @@ import javax.mail.internet.MimeMessage;
  */
 public class EmailUtility {
     public static void sendEmail(String host, String port,
-            final String userName, final String password, String toAddress,
+            String userName,  String password, String toAddress,
             String subject, String message) throws AddressException,
             MessagingException {
  

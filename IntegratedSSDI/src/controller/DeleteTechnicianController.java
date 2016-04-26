@@ -11,6 +11,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import model.Login;
 import model.ServicesDao;
@@ -27,6 +28,9 @@ import model.technician;
 public class  DeleteTechnicianController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private ServicesDao serviceDao;
+	 private  RequestDispatcher rd = null;
+	    private HttpSession session = null;
+
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -35,6 +39,15 @@ public class  DeleteTechnicianController extends HttpServlet {
         // TODO Auto-generated constructor stub
     }
 
+    public DeleteTechnicianController(ServicesDao s,RequestDispatcher rd,HttpSession sess) {
+        super();
+        serviceDao = s;
+        this.rd = rd;
+        session = sess;
+        
+        // TODO Auto-generated constructor stub
+    }
+    
     public void init(ServletConfig config) throws ServletException {
   		super.init(config);
   		ServletContext context = getServletContext();
@@ -45,7 +58,7 @@ public class  DeleteTechnicianController extends HttpServlet {
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		 processRequest(request, response);
 		
@@ -68,13 +81,18 @@ public class  DeleteTechnicianController extends HttpServlet {
 	     //     List errorMsgs = new  LinkedList();
 	        	
 	          PrintWriter out = response.getWriter();
+	          HttpSession session=request.getSession(false);  
+	          
+        	  
+              String username=(String)session.getAttribute("username");
+              if(username!=null){    
 	           String tech_id = request.getParameter("techId");
 	          
 	           technician technician = new technician(tech_id);
 	           System.out.println("tech id :"+tech_id);
 	                 System.out.println("inside");
 	                 int flag = serviceDao.deleteTechnician(technician);
-	                 RequestDispatcher rd = null;
+	                 //RequestDispatcher rd = null;
 	                 if (flag == 0)
 	                 {  String str = "Technician "+tech_id+" deleted Successfully";
 	                 request.setAttribute("msg", str);
@@ -101,7 +119,14 @@ public class  DeleteTechnicianController extends HttpServlet {
 	                 
 	            
 	           
-	    }  catch (Exception ex) {
+	    }else
+	    	{
+	    	 out.print("Please login first");  
+             request.getRequestDispatcher("InitialPage.jsp").include(request, response);  
+	    	
+	    	}
+	    	}
+	        catch (Exception ex) {
 	    	ex.printStackTrace();
 	       }
 	    }

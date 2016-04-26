@@ -142,6 +142,8 @@ String query = "select SP.storeId from storeproduct SP , store S  where    S.sto
            </center>
                    
        </form>
+       <br />
+  <center> <a href = "NewRequest.jsp"><button>CANCEL</button></a></center>
   </div>
     
 <div id="left">
@@ -152,7 +154,7 @@ String query = "select SP.storeId from storeproduct SP , store S  where    S.sto
       <form method = "post" action="ViewHistoryController">
       <input type="submit" value="VIEW HISTORY" /></form>
     <br />
-    <a href="ResetPassword.jsp"><button ">RESET PASSWORD</button></a>
+    <a href="ResetPassword.jsp"><button ">CHANGE PASSWORD</button></a>
     <br /><br />
         <form method = "post" action="loadprofilecontroller">
       <input type="submit" value="MANAGE PROFILE" /></form>

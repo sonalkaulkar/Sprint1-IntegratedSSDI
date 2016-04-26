@@ -11,14 +11,15 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
-import model.Customer;
 import model.Login;
 import model.ServicesDao;
 import model.ServicesDaoFactory;
 import model.Store;
 import model.User;
 import model.UserFactory;
+import model.orderObserve.Observer.Customer;
 
 /**
  * Servlet implementation class ManageProfileController
@@ -27,6 +28,8 @@ import model.UserFactory;
 public class  ManageProfileController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private ServicesDao serviceDao;
+	   private  RequestDispatcher rd = null;
+	    private HttpSession session = null;
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -34,7 +37,14 @@ public class  ManageProfileController extends HttpServlet {
         super();
         // TODO Auto-generated constructor stub
     }
-
+    public ManageProfileController(ServicesDao s,RequestDispatcher rd,HttpSession sess) {
+        super();
+        serviceDao = s;
+        this.rd = rd;
+        session = sess;
+        
+        // TODO Auto-generated constructor stub
+    }
     public void init(ServletConfig config) throws ServletException {
   		super.init(config);
   		ServletContext context = getServletContext();
@@ -45,7 +55,7 @@ public class  ManageProfileController extends HttpServlet {
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		 processRequest(request, response);
 		
@@ -66,8 +76,11 @@ public class  ManageProfileController extends HttpServlet {
 	        try  {
 	            /* TODO output your page here. You may use following sample code. */
 	     //     List errorMsgs = new  LinkedList();
-	        	
-	          PrintWriter out = response.getWriter();
+	          	HttpSession session=request.getSession(false);  
+	          	PrintWriter out = response.getWriter();    
+	              String username=(String)session.getAttribute("username");  
+	              if(username!=null){
+	          
 	           String customer_id = request.getParameter("customerId");
 	           String customer_name = request.getParameter("customerName");
 	           String customer_loc = request.getParameter("location");
@@ -79,7 +92,7 @@ public class  ManageProfileController extends HttpServlet {
 	                
 	                 System.out.println("inside");
 	                 int flag = serviceDao.updateCustomer(customer);
-	                 RequestDispatcher rd = null;
+	            //     RequestDispatcher rd = null;
 	                 if (flag != 0)
 	                 {
 	                	 String str = "Profile  not updated Successfully";
@@ -95,7 +108,12 @@ public class  ManageProfileController extends HttpServlet {
 	                 rd.include(request, response);  
 	                 }
 	                 
-	                
+	              }
+	              else
+	              {
+	            	  out.print("Please login first");  
+		              request.getRequestDispatcher("InitialPage.jsp").include(request, response);  
+	              }
 	                 
 	            
 	           

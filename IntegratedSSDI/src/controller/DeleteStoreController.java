@@ -27,6 +27,9 @@ import model.UserFactory;
 public class  DeleteStoreController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private ServicesDao serviceDao;
+	private  RequestDispatcher rd = null;
+    private HttpSession session = null;
+
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -35,17 +38,26 @@ public class  DeleteStoreController extends HttpServlet {
         // TODO Auto-generated constructor stub
     }
 
+    public DeleteStoreController(ServicesDao s,RequestDispatcher rd,HttpSession sess) {
+        super();
+        serviceDao = s;
+        this.rd = rd;
+        session = sess;
+        
+        // TODO Auto-generated constructor stub
+    }
     public void init(ServletConfig config) throws ServletException {
   		super.init(config);
   		ServletContext context = getServletContext();
   		ServicesDaoFactory factory = ServicesDaoFactory.getInstance(context.getInitParameter("environment"));
   		 serviceDao = factory.createServiceDao();
   	}
+    
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		 processRequest(request, response);
 		
@@ -68,9 +80,9 @@ public class  DeleteStoreController extends HttpServlet {
 	            /* TODO output your page here. You may use following sample code. */
 	     //     List errorMsgs = new  LinkedList();
 	        	HttpSession session=request.getSession(false);  
-		          if(session!=null){  
+		          
 		              String username=(String)session.getAttribute("username");  
-		                
+		              if(username!=null){   
 		              //out.print("Hello, "+username); 
 //	          PrintWriter out = response.getWriter();
 	           String store_id = request.getParameter("storeId");
@@ -79,7 +91,7 @@ public class  DeleteStoreController extends HttpServlet {
 	           System.out.println("store id :"+store_id);
 	                 System.out.println("inside");
 	                 int flag = serviceDao.deleteStore(store);
-	                 RequestDispatcher rd = null;
+	                 //RequestDispatcher rd = null;
 	                 if (flag != 0)
 	                 {
 	                	 String str = "Store "+store_id+" not deleted Successfully";

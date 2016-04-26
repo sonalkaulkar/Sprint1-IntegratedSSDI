@@ -43,6 +43,7 @@
          <form  name = "Technician" onsubmit = "return validateForm()" method = "post" action="DeleteTechnicianController">
                    <center>
                <h1>Technician Details</h1>
+               <br></br>
           <div style="height:200px; overflow:auto">	
                <table>
               
@@ -79,6 +80,7 @@
               </table>
               </div>
         <table><tr>
+                   <br></br>
                    <td>Enter the Technician Id :
                  
                      <%
@@ -131,7 +133,7 @@ query = "select techId  from technician where store_id = ? and  techId <> '1';";
                    
            </tr></table>
                <table> <tr>   
-                 
+                 <br></br>
     				<td><input type="submit" name="delete" value="Delete Technician"  onclick="form.action='deletetechniciancontroller';"/></td>
     			
     				</tr>
@@ -139,6 +141,8 @@ query = "select techId  from technician where store_id = ? and  techId <> '1';";
            </center>
                    
        </form>
+       <br />
+  <center> <a href = "StrManagerHome.jsp"><button>CANCEL</button></a></center>
   </div>
 
   <div id="left">
@@ -158,12 +162,13 @@ query = "select techId  from technician where store_id = ? and  techId <> '1';";
     <br /><br/>
        <form method = "post" action="ViewStoreordersController">
       <input type="submit" value="MONITOR ORDERS" /></form>
+    <br />
+    <a href="TransferOrdersTo.jsp"><button>TRANSFER ORDERS</button></a>
     <br /><br />  
     
   </div>
  
 </div>
-
 <div id="footer">
      <div id="r"> &copy; Copyright 2016, Your Website - <label> <%
       if(session!=null){  

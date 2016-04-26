@@ -89,6 +89,7 @@
            <table align="center" >
                <center><h1>ADD DELIVERY STAFF</h1></center>
                <tr>
+               <br></br>
                <td>USER NAME:</td>
                <td><input type="text" name="delusername" value="" /></td>
                </tr><td></td><td></td>
@@ -105,7 +106,7 @@ while (rs.next())
 {    delid = rs.getInt(1);
 	 delid += 1;
 	}
-out.print("<td><input type='text' name='deliveryId' value='"+delid+"' /></td>");
+out.print("<td><input type='text' name='deliveryId' value='"+delid+"'  readonly/></td>");
 %>
                </tr><td></td><td></td>
                <tr>
@@ -143,8 +144,14 @@ out.print("<td><input type='text' name='deliveryId' value='"+delid+"' /></td>");
                
            </tr>
            </table>
-           <td><center><input type="submit" value="REGISTER" /></td></center>
+           <br></br>
+           <h1><center><input type="submit" value="REGISTER" />
+          
+          </center></h1>
+          
 </form>
+<br />
+  <center> <a href = "StrManagerHome.jsp"><button>CANCEL</button></a></center>
   </div>
 
   <div id="left">

@@ -1,10 +1,10 @@
-package model;
+package model.orderObserve.observable;
 
 import java.sql.Date;
 import java.sql.Timestamp;
 
-public class orderDetails {
-public String orderId;
+public class orderDetails  implements IOrderData{
+public int orderId;
 public Timestamp date_of_order;
 public String prodId;
 public String make;
@@ -15,12 +15,13 @@ public String order_status;
 public String delivery_id;
 public String description;
 public String payment_status;
+public String location;
 
 public orderDetails() {
 	// TODO Auto-generated constructor stub
 }
-public orderDetails(String orderId,Timestamp date_of_order,String prodId,String make,String tech_Id,
-		String store_Id,String customer_Id,String order_status,String delivery_id,String description,String payment_status)
+public orderDetails(int orderId,Timestamp date_of_order,String prodId,String make,String tech_Id,
+		String store_Id,String customer_Id,String order_status,String delivery_id,String description,String payment_status,String location)
 {
 this.customer_Id=customer_Id;
 this.orderId=orderId;
@@ -33,6 +34,15 @@ this.order_status=order_status;
 this.delivery_id=delivery_id;
 this.description=description;
 this.payment_status=payment_status;
+this.location = location;
+}
+
+public void setLocation(String location) {
+	this.location = location;
+}
+
+public String getLocation() {
+	return location;
 }
 public String getCustomer_Id() {
 	return customer_Id;
@@ -52,7 +62,7 @@ public String getMake() {
 public String getOrder_status() {
 	return order_status;
 }
-public String getOrderId() {
+public int getOrderId() {
 	return orderId;
 }
 public String getPayment_status() {
@@ -88,8 +98,8 @@ public void setMake(String make) {
 public void setOrder_status(String order_status) {
 	this.order_status = order_status;
 }
-public void setOrderId(String orderId) {
-	this.orderId = orderId;
+public void setOrderId(int order_id) {
+	this.orderId = order_id;
 }
 public void setPayment_status(String payment_status) {
 	this.payment_status = payment_status;

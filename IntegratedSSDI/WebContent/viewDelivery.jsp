@@ -125,6 +125,8 @@ query = "select deliveryId  from deliverystaff where store_id = ?;";
            </center>
                    
        </form>
+       <br />
+  <center> <a href = "StrManagerHome.jsp"><button>CANCEL</button></a></center>
   </div>
 
  <div id="left">

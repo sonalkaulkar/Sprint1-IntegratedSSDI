@@ -1,7 +1,7 @@
 <%@page import="java.util.Iterator"%>
 <%@page import="java.util.LinkedList"%>
 <%@page import="java.util.ArrayList"%>
-<%@page import="model.orderDetails"%>
+<%@page import="model.orderObserve.observable.orderDetails"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -74,6 +74,8 @@
            </center>
                    
        </form>
+       <br />
+  <center> <a href = "StrManagerHome.jsp"><button>CANCEL</button></a></center>
   </div>
   
 <div id="left">
@@ -93,12 +95,14 @@
     <br /><br/>
        <form method = "post" action="ViewStoreordersController">
       <input type="submit" value="MONITOR ORDERS" /></form>
+    
+    <br /><br />
+    <a href="TransferOrdersTo.jsp"><button>TRANSFER ORDERS</button></a>
     <br /><br />  
     
   </div>
  
-</div>
-  
+</div>  
 <div id="footer">
      <div id="r"> &copy; Copyright 2016, Your Website - <label> <%
       if(session!=null){  

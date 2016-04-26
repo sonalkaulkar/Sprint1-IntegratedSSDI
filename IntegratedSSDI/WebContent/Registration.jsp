@@ -56,6 +56,12 @@
           alert("Please provide the password");
          return false;         
          }
+         var x1 = document.forms["Registration"]["customer_password"].value;
+         var x2 = document.forms["Registration"]["confirm_password"].value;
+         if (x1!=x2) {
+             alert("Password and confirm password should match");
+            return false;         
+            }
         }
         </script>
 <link rel="stylesheet" type="text/css" href="style.css" media="screen" />
@@ -91,7 +97,7 @@ while (rs.next())
 {    customerid = rs.getInt(1);
 	 customerid += 1;
 	}
-out.print("<td><input type='text' name='customerId' value='"+customerid+"' /></td>");
+out.print("<td><input type='text' name='customerId' value='"+customerid+"' readonly /></td>");
 %>
            
                </tr><td></td><td></td>
@@ -127,7 +133,12 @@ out.print("<td><input type='text' name='customerId' value='"+customerid+"' /></t
                </tr><td></td><td></td>
                <tr>
                <td></td><td></td>
-                              
+                <tr>
+               <td>CONFIRM PASSWORD:</td>
+               <td><input type="password" name="confirm_password" value="" /></td>
+               </tr><td></td><td></td>
+               <tr>
+               <td></td><td></td>
                
                
            </tr>
@@ -135,6 +146,8 @@ out.print("<td><input type='text' name='customerId' value='"+customerid+"' /></t
            <br></br>
            <td><center><input type="submit" value="REGISTER" /></td></center>
 </form>
+<br />
+  <center> <a href = "InitialPage.jsp"><button>CANCEL</button></a></center>
   </div>
 
 <div id="left">

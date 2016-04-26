@@ -12,10 +12,12 @@ import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.uncc.util.ConnectionUtil;
-import org.uncc.util.IConnectionData;
-
 import model.*;
+import model.orderObserve.Observer.Customer;
+import model.orderObserve.observable.OrderDataProvider;
+import model.orderObserve.observable.orderDetails;
+import util.db.connection.ConnectionUtil;
+import util.db.connection.IConnectionData;
 /**
  *
  * @author skaul
@@ -161,7 +163,7 @@ public class ServicesDao {
             stmt.setString(1,l.getUsername());
             
             ResultSet rs = stmt.executeQuery();
-            while(rs.next())
+            if(rs.next())
             {
             	
             	if(!rs.getString(1).equals(l.getPassword()) )
@@ -197,7 +199,7 @@ public class ServicesDao {
        
         try { 
         	Connection connection = null;
-            String query = "select storeId,storeName,storeAdd,storeLocation,store_phone_no,store_email_id,manager from store LIMIT 10;";
+            String query = "select storeId,storeName,storeAdd,storeLocation,store_phone_no,store_email_id,manager from store;";
             
             PreparedStatement stmt = null;
             connection = ConnectionUtil.getConnection(connectionData);
@@ -353,6 +355,19 @@ public class ServicesDao {
             stmt.executeUpdate();
             
             
+            query = "select orderId from orderdetails O  where O.location not in (select D.location from deliverystaff D where "
+            		+ "deliveryId = O.delivery_id) and O.location = ?  ";
+            stmt = connection.prepareStatement(query);
+            stmt.setString(1, D.getLocation());
+            ResultSet rs1 = stmt.executeQuery();
+            while(rs1.next())
+            {
+            	query = "update orderdetails set delivery_id = ?  where orderId = ?";
+                stmt = connection.prepareStatement(query);
+                stmt.setString(1, D.getDeliveryId());
+                stmt.setInt(2, rs1.getInt(1));
+                stmt.executeUpdate();
+            }
                return 0;	
                   
         } catch (SQLException ex) {
@@ -683,7 +698,7 @@ public class ServicesDao {
              cal.setTime(utilDate);
              cal.set(Calendar.MILLISECOND, 0);
              java.sql.Timestamp t = new java.sql.Timestamp(utilDate.getTime()); 
-            query = "insert into orderdetails(date_of_order,prodId,make,tech_id,store_id,customer_id,order_status,delivery_id,description,payment_status) values(?,?,?,?,?,?,?,?,?,?)";            
+            query = "insert into orderdetails(date_of_order,prodId,make,tech_id,store_id,customer_id,order_status,delivery_id,description,payment_status,location) values(?,?,?,?,?,?,?,?,?,?,?)";            
             
             stmt = connection.prepareStatement(query);
             
@@ -697,6 +712,7 @@ public class ServicesDao {
             stmt.setInt(8, deliveryId);
             stmt.setString(9, description);
             stmt.setString(10, "");
+            stmt.setString(11, location);
             stmt.executeUpdate();
             query = "select max(orderId) from orderdetails";
             stmt = connection.prepareStatement(query);
@@ -1105,29 +1121,60 @@ public class ServicesDao {
 
             PreparedStatement stmt = null;
         	connection = ConnectionUtil.getConnection(connectionData);
-        	String query = "select orderid  from orderdetails where  tech_id = ?";
+        	String query = "select orderid ,store_id from orderdetails where  tech_id = ?";
         	stmt = connection.prepareStatement(query);
         	System.out.println(t.getTechId());
             stmt.setString(1, t.getTechId());
             ResultSet rs = stmt.executeQuery();
             //System.out.println(rs.next());
-            if(!rs.next())
+            while(rs.next())
             {  
-            	
-        	 query = "delete from technician  where techId = ?";
+             int order_id = rs.getInt(1);
+             System.out.println("orders "+order_id);
+             int store_id = rs.getInt(2);
+             int t_id = Integer.parseInt(t.getTechId());
+             int tech_id =assignTechnicianDel(order_id, store_id,t_id);
+             System.out.println("tech id assigned "+tech_id);
+             query = "select no_of_orders from  technician  where techId = ?";
+    		 stmt = connection.prepareStatement(query);
+             stmt.setInt(1,tech_id);
+             ResultSet rs1 = stmt.executeQuery();
+             int no_of_orders = 0 ;
+             if(rs1.next())
+             {	
+              no_of_orders = rs1.getInt(1);
+              System.out.println("iniytial"+no_of_orders);
+             no_of_orders++;
+             }
+             System.out.println("no_of_orders"+no_of_orders);
+             query = "update technician  set  techstatus = 'busy',no_of_orders = ?  where techId = ?";
+    		 stmt = connection.prepareStatement(query);
+    		 stmt.setInt(1,no_of_orders);
+             stmt.setInt(2,tech_id);
+             stmt.executeUpdate();
+             
+    		 query = "update orderdetails set   tech_id = ? where orderId = ?";
+    		 stmt = connection.prepareStatement(query);
+             stmt.setInt(2,order_id);
+             stmt.setInt(1,tech_id);
+             stmt.executeUpdate();
+          
+            }
             
-            
-            
+          	
+            query = "delete from technician  where techId = ?";
             stmt = connection.prepareStatement(query);
             stmt.setString(1, t.getTechId());
             stmt.executeUpdate();
             
-               return 0;	
-            }
-            else
-            {
-            	return 2;
-            }
+        	
+            query = "delete from login where roleid  = ?";
+            stmt = connection.prepareStatement(query);
+            stmt.setString(1, t.getTechId());
+            stmt.executeUpdate();
+            
+            return 0;
+          
         } catch (SQLException ex) {
             
             System.out.println("hiii");
@@ -1253,14 +1300,14 @@ public class ServicesDao {
             {   
             	
 
-            	String order_id = rs.getString(1);
+            	int order_id = rs.getInt(1);
             	Timestamp date = rs.getTimestamp(2);
             	String make = rs.getString(4);
             	String orderstatus = rs.getString(8);
             	String payment = rs.getString(11);
             	String desc = rs.getString(10);
             	String del_id = Integer.toString(rs.getInt(9));
-            	orderDetails o= new orderDetails(order_id, date,"0", make,"0","0","0",orderstatus,del_id,desc,payment);
+            	orderDetails o= new orderDetails(order_id, date,"0", make,"0","0","0",orderstatus,del_id,desc,payment,"");
             	//System.out.println(CustomerName+"add"+Customeradd+"phone"+Customerphone+"email"+Customeremail+"prod"+product);
             			plist.add(o);
                  
@@ -1277,4 +1324,647 @@ public class ServicesDao {
        
     }
     
+    
+    public int updatePickup(ArrayList<Integer> orders,String username) 
+    { 
+       System.out.println("i m here ");
+        try { 
+        	Connection connection = null;
+        	PreparedStatement stmt = null;
+            connection = ConnectionUtil.getConnection(connectionData);
+            String query = null;
+            query = "select store_id from deliverystaff where deliveryid IN (select roleid from  login where username  = ?) ;";
+            stmt = connection.prepareStatement(query);
+            System.out.println(username);
+  		  	stmt.setString(1,username);
+             ResultSet rs =  stmt.executeQuery();
+           int store_id = 0;
+            while (rs.next())
+            	
+            { System.out.println(rs.getInt(1));
+            	store_id = rs.getInt(1);}
+            OrderDataProvider or = new OrderDataProvider();
+            Customer c = new Customer (or);
+        	for (int i = 0 ; i < orders.size() ; i++)
+        	
+        	{	System.out.println("inside for loop");
+        		or.checkOrderStatus("PickedUp", orders.get(i));
+                 int tech_id = assignTechnician(orders.get(i),store_id);
+                 query = "select no_of_orders from  technician  where techId = ?";
+        		 stmt = connection.prepareStatement(query);
+                 stmt.setInt(1,tech_id);
+                  rs = stmt.executeQuery();
+                 int no_of_orders = 0 ;
+                 if(rs.next())
+                 {	
+                  no_of_orders = rs.getInt(1);
+                  System.out.println("iniytial"+no_of_orders);
+                 no_of_orders++;
+                 }
+                 System.out.println("no_of_orders"+no_of_orders);
+                 query = "update technician  set  techstatus = 'busy',no_of_orders = ?  where techId = ?";
+        		 stmt = connection.prepareStatement(query);
+        		 stmt.setInt(1,no_of_orders);
+                 stmt.setInt(2,tech_id);
+                 stmt.executeUpdate();
+                 
+        		 query = "update orderdetails set  order_status = 'PickedUp' , tech_id = ? where orderId = ?";
+        		 stmt = connection.prepareStatement(query);
+                 stmt.setInt(2,orders.get(i));
+                 stmt.setInt(1,tech_id);
+                 stmt.executeUpdate();
+                 
+                 
+        	}
+        	
+               return 0;	
+                  
+        } catch (SQLException ex) {
+            
+            System.out.println("hiii");
+                 
+            Logger.getLogger(ServicesDao.class.getName()).log(Level.SEVERE, null, ex);
+            return 1;
+        }
+       
+    }
+      
+    public int  assignTechnician(int order ,int store_id)
+    {
+    	try
+    	{
+    	Connection connection = null;
+    	PreparedStatement stmt = null;
+        connection = ConnectionUtil.getConnection(connectionData);
+        String query = null;
+        query = "select techid from  technician where store_id = ? and techstatus = ?  and no_of_orders = 0 and techid  <> 1;";
+        stmt = connection.prepareStatement(query);
+		  	stmt.setInt(1,store_id);
+		  	stmt.setString(2,"free");
+         ResultSet rs =  stmt.executeQuery();
+       ArrayList<Integer> new_tech_ids = new ArrayList<Integer>();
+       int free_tech_count_with_zero = 0;
+       
+        while (rs.next())
+        {  System.out.println(rs.getInt(1));
+           new_tech_ids.add(rs.getInt(1));
+           free_tech_count_with_zero++;
+        }
+        System.out.println(free_tech_count_with_zero);
+        if (free_tech_count_with_zero != 0)
+        {
+        	Random ran = new Random();
+            int x = ran.nextInt(free_tech_count_with_zero) ;
+            System.out.println("returned tech id "+new_tech_ids.get(x));
+            return new_tech_ids.get(x); 
+        }
+        else
+        {   System.out.println("inside busy/free");
+            query = "select techid,no_of_orders from  technician where store_id = ? and techstatus = ?  and techid <> 1;";
+            stmt = connection.prepareStatement(query);
+    		stmt.setInt(1,store_id);
+    		stmt.setString(2,"free");
+            rs =  stmt.executeQuery();
+           ArrayList<Integer> free_tech_ids = new ArrayList<Integer>();
+           ArrayList<Integer> no_of_orders = new ArrayList<Integer>();
+           ArrayList<Integer> tech_with_same_min_order= new ArrayList<Integer>();
+           int free_tech_count = 0,ctech_with_same_min_order = 0;
+           while (rs.next())
+           {  no_of_orders.add(rs.getInt(2));
+              free_tech_ids.add(rs.getInt(1));
+              free_tech_count++;
+           }	
+           if (free_tech_count != 0)
+           {   int min_order = 999999999 ,tech_id = 0;
+        	   for (int i = 0 ; i < free_tech_count ; i++ )
+        	   {
+        		   if (no_of_orders.get(i) < min_order)
+        		   {
+        			   min_order = no_of_orders.get(i);
+        			  // tech_id = free_tech_ids.get(i);
+        		   }
+        	   }
+        	   for (int i = 0 ; i < free_tech_count ; i++ )
+        	   {
+        		   if (no_of_orders.get(i) == min_order)
+        		   {
+        			   ctech_with_same_min_order++;
+        			   tech_with_same_min_order.add(free_tech_ids.get(i));
+        			   
+        		   }
+        	
+        	   }
+        	   if(ctech_with_same_min_order == 1) 
+        	   {
+        	      return tech_with_same_min_order.get(0);
+           		}
+               else
+               {   @SuppressWarnings("deprecation")
+			Timestamp t = new Timestamp(9999, 12, 31, 24, 60, 60, 60);
+            	   for (int i = 0; i < ctech_with_same_min_order ; i ++)
+            	   {
+            		   query = "select last_completed_timestamp from  technician where techId = ? ;";
+                       stmt = connection.prepareStatement(query);
+               		stmt.setInt(1,tech_with_same_min_order.get(i));
+               	    rs =  stmt.executeQuery();
+               	    if(rs.next())
+               	    {
+               	    	Timestamp t1 = rs.getTimestamp(1);
+               	    	if (t1.before(t))
+               	    	{
+               	    		tech_id = tech_with_same_min_order.get(i);
+               	    	}
+               	    }
+            	   }
+            	   return tech_id;
+               }
+        	
+        	
+           }
+           else
+           {   
+        	   query = "select techid,no_of_orders from  technician where store_id = ? and techid <> 1 ";
+               stmt = connection.prepareStatement(query);
+       		   stmt.setInt(1,store_id);
+               rs =  stmt.executeQuery();
+              ArrayList<Integer> busy_tech_ids = new ArrayList<Integer>();
+              ArrayList<Integer> busy_no_of_orders = new ArrayList<Integer>();
+              ArrayList<Integer> busy_with_same_min_order= new ArrayList<Integer>();
+              int busy_tech_count = 0,cbusy_with_same_min_order = 0;
+              while (rs.next())
+              {  busy_no_of_orders.add(rs.getInt(2));
+                 busy_tech_ids.add(rs.getInt(1));
+                 busy_tech_count++;
+              }	
+               int min_order = 999999999 ,tech_id = 0;
+           	   for (int i = 0 ; i < busy_tech_count ; i++ )
+           	   {
+           		   if (busy_no_of_orders.get(i) < min_order)
+           		   {
+           			   min_order = busy_no_of_orders.get(i);
+           			  // tech_id = free_tech_ids.get(i);
+           		   }
+           	   }
+           	   for (int i = 0 ; i < busy_tech_count ; i++ )
+           	   {
+           		   if (busy_no_of_orders.get(i) == min_order)
+           		   {
+           			   cbusy_with_same_min_order++;
+           			   busy_with_same_min_order.add(busy_tech_ids.get(i));
+           			   
+           		   }
+           	
+           	   }
+           	   if(cbusy_with_same_min_order == 1) 
+           	   {
+           	      return busy_with_same_min_order.get(0);
+              		}
+                  else
+                  {   @SuppressWarnings("deprecation")
+   			Timestamp t = new Timestamp(9999, 12, 31, 24, 60, 60, 60);
+               	   for (int i = 0; i < cbusy_with_same_min_order ; i ++)
+               	   {
+               		   query = "select last_completed_timestamp from  technician where techId = ? ;";
+                          stmt = connection.prepareStatement(query);
+                  		stmt.setInt(1,busy_with_same_min_order.get(i));
+                  	    rs =  stmt.executeQuery();
+                  	    if(rs.next())
+                  	    {
+                  	    	Timestamp t1 = rs.getTimestamp(1);
+                  	    	if (t1.before(t))
+                  	    	{   t = t1;
+                  	    		tech_id = busy_with_same_min_order.get(i);
+                  	    	}
+                  	    }
+               	   }
+               	   return tech_id;
+                  }
+           	
+
+           }
+        }
+        
+        
+    }
+catch (SQLException ex) {
+            
+            System.out.println("hiii");
+                 
+            Logger.getLogger(ServicesDao.class.getName()).log(Level.SEVERE, null, ex);
+          
+        }
+		return -1 ;
+       
+    }
+    
+    
+    public int  assignTechnicianDel(int order_id ,int store_id,int t_id)
+    {
+    	try
+    	{
+    	Connection connection = null;
+    	PreparedStatement stmt = null;
+        connection = ConnectionUtil.getConnection(connectionData);
+        String query = null;
+        query = "select techid from  technician where store_id = ? and techstatus = ?  and no_of_orders = 0 and techid  <> 1 and techid  <> ?;";
+        stmt = connection.prepareStatement(query);
+		  	stmt.setInt(1,store_id);
+		  	stmt.setString(2,"free");
+		  	stmt.setInt(3,t_id);
+         ResultSet rs =  stmt.executeQuery();
+       ArrayList<Integer> new_tech_ids = new ArrayList<Integer>();
+       int free_tech_count_with_zero = 0;
+       
+        while (rs.next())
+        {  System.out.println(rs.getInt(1));
+           new_tech_ids.add(rs.getInt(1));
+           free_tech_count_with_zero++;
+        }
+        System.out.println(free_tech_count_with_zero);
+        if (free_tech_count_with_zero != 0)
+        {
+        	Random ran = new Random();
+            int x = ran.nextInt(free_tech_count_with_zero) ;
+            System.out.println("returned tech id "+new_tech_ids.get(x));
+            return new_tech_ids.get(x); 
+        }
+        else
+        {   System.out.println("inside busy/free");
+            query = "select techid,no_of_orders from  technician where store_id = ? and techstatus = ?  and techid <> 1 and techid <> ?;";
+            stmt = connection.prepareStatement(query);
+    		stmt.setInt(1,store_id);
+    		stmt.setString(2,"free");
+    		stmt.setInt(3,t_id);
+            rs =  stmt.executeQuery();
+           ArrayList<Integer> free_tech_ids = new ArrayList<Integer>();
+           ArrayList<Integer> no_of_orders = new ArrayList<Integer>();
+           ArrayList<Integer> tech_with_same_min_order= new ArrayList<Integer>();
+           int free_tech_count = 0,ctech_with_same_min_order = 0;
+           while (rs.next())
+           {  no_of_orders.add(rs.getInt(2));
+              free_tech_ids.add(rs.getInt(1));
+              free_tech_count++;
+           }	
+           if (free_tech_count != 0)
+           {   int min_order = 999999999 ,tech_id = 0;
+        	   for (int i = 0 ; i < free_tech_count ; i++ )
+        	   {
+        		   if (no_of_orders.get(i) < min_order)
+        		   {
+        			   min_order = no_of_orders.get(i);
+        			  // tech_id = free_tech_ids.get(i);
+        		   }
+        	   }
+        	   for (int i = 0 ; i < free_tech_count ; i++ )
+        	   {
+        		   if (no_of_orders.get(i) == min_order)
+        		   {
+        			   ctech_with_same_min_order++;
+        			   tech_with_same_min_order.add(free_tech_ids.get(i));
+        			   
+        		   }
+        	
+        	   }
+        	   if(ctech_with_same_min_order == 1) 
+        	   {
+        	      return tech_with_same_min_order.get(0);
+           		}
+               else
+               {   @SuppressWarnings("deprecation")
+			Timestamp t = new Timestamp(9999, 12, 31, 24, 60, 60, 60);
+            	   for (int i = 0; i < ctech_with_same_min_order ; i ++)
+            	   {
+            		   query = "select last_completed_timestamp from  technician where techId = ? ;";
+                       stmt = connection.prepareStatement(query);
+               		stmt.setInt(1,tech_with_same_min_order.get(i));
+               	    rs =  stmt.executeQuery();
+               	    if(rs.next())
+               	    {
+               	    	Timestamp t1 = rs.getTimestamp(1);
+               	    	if (t1.before(t))
+               	    	{
+               	    		tech_id = tech_with_same_min_order.get(i);
+               	    	}
+               	    }
+            	   }
+            	   return tech_id;
+               }
+        	
+        	
+           }
+           else
+           {   
+        	   query = "select techid,no_of_orders from  technician where store_id = ? and techid <> 1  and techid <> ?";
+               stmt = connection.prepareStatement(query);
+       		   stmt.setInt(1,store_id);
+       		   stmt.setInt(2,t_id);
+               rs =  stmt.executeQuery();
+              ArrayList<Integer> busy_tech_ids = new ArrayList<Integer>();
+              ArrayList<Integer> busy_no_of_orders = new ArrayList<Integer>();
+              ArrayList<Integer> busy_with_same_min_order= new ArrayList<Integer>();
+              int busy_tech_count = 0,cbusy_with_same_min_order = 0;
+              while (rs.next())
+              {  busy_no_of_orders.add(rs.getInt(2));
+                 busy_tech_ids.add(rs.getInt(1));
+                 busy_tech_count++;
+              }	
+               int min_order = 999999999 ,tech_id = 0;
+           	   for (int i = 0 ; i < busy_tech_count ; i++ )
+           	   {
+           		   if (busy_no_of_orders.get(i) < min_order)
+           		   {
+           			   min_order = busy_no_of_orders.get(i);
+           			  // tech_id = free_tech_ids.get(i);
+           		   }
+           	   }
+           	   for (int i = 0 ; i < busy_tech_count ; i++ )
+           	   {
+           		   if (busy_no_of_orders.get(i) == min_order)
+           		   {
+           			   cbusy_with_same_min_order++;
+           			   busy_with_same_min_order.add(busy_tech_ids.get(i));
+           			   
+           		   }
+           	
+           	   }
+           	   if(cbusy_with_same_min_order == 1) 
+           	   {
+           	      return busy_with_same_min_order.get(0);
+              		}
+                  else
+                  {   @SuppressWarnings("deprecation")
+   			Timestamp t = new Timestamp(9999, 12, 31, 24, 60, 60, 60);
+               	   for (int i = 0; i < cbusy_with_same_min_order ; i ++)
+               	   {
+               		   query = "select last_completed_timestamp from  technician where techId = ? ;";
+                          stmt = connection.prepareStatement(query);
+                  		stmt.setInt(1,busy_with_same_min_order.get(i));
+                  	    rs =  stmt.executeQuery();
+                  	    if(rs.next())
+                  	    {
+                  	    	Timestamp t1 = rs.getTimestamp(1);
+                  	    	if (t1.before(t))
+                  	    	{   t = t1;
+                  	    		tech_id = busy_with_same_min_order.get(i);
+                  	    	}
+                  	    }
+               	   }
+               	   return tech_id;
+                  }
+           	
+
+           }
+        }
+        
+        
+    }
+catch (SQLException ex) {
+            
+            System.out.println("hiii");
+                 
+            Logger.getLogger(ServicesDao.class.getName()).log(Level.SEVERE, null, ex);
+          
+        }
+		return -1 ;
+       
+    }
+    
+    
+    public ArrayList<PickUpOrder> viewDelivered(String username) 
+    {   	  ArrayList<PickUpOrder> plist = new ArrayList();
+       
+        try { 
+        	Connection connection = null;
+        	 String query = "select roleid from login where username = ?";
+             int delivery_id = 0;
+             PreparedStatement stmt = null;
+             connection = ConnectionUtil.getConnection(connectionData);
+             stmt = connection.prepareStatement(query);
+             stmt.setString(1,username);
+             ResultSet rs = stmt.executeQuery();
+             if (rs.next())
+             {
+             	delivery_id = rs.getInt(1);
+             }
+             
+           query = "select orderId,customer_id,prodId    from orderdetails where delivery_id = ? and order_status = 'Serviced';";
+            
+          
+            connection = ConnectionUtil.getConnection(connectionData);
+            
+            stmt = connection.prepareStatement(query);
+            stmt.setInt(1,delivery_id);
+            rs = stmt.executeQuery();
+            while (rs.next())
+            {   
+            	int  orderId = rs.getInt(1);
+            	int  custid  = rs.getInt(2);
+            	int prodid = rs.getInt(3);
+            	System.out.println("hiii"+orderId+"cust"+custid+"prod"+prodid);
+            	query = "select description from product where prodId = ? ";
+            	stmt = connection.prepareStatement(query);
+                stmt.setInt(1,prodid);
+                ResultSet rs1 = stmt.executeQuery();
+                String product = null;
+                if (rs1.next())
+                {
+                 product = rs1.getString(1);
+                }
+                query = "select customerName,customer_email_id,customer_phone_no ,customer_add from customer where customerId  = ? ";
+            	stmt = connection.prepareStatement(query);
+                stmt.setInt(1,custid);
+                 rs1 = stmt.executeQuery();
+                 if(rs1.next())
+                 {
+            
+            	String CustomerName = rs1.getString(1);
+            	String Customeremail = rs1.getString(2);
+            	String Customerphone = rs1.getString(3);
+            	String Customeradd = rs1.getString(4);
+            	PickUpOrder p = new PickUpOrder(orderId, CustomerName, Customeradd, Customerphone, Customeremail, product);
+            	System.out.println(CustomerName+"add"+Customeradd+"phone"+Customerphone+"email"+Customeremail+"prod"+product);
+            			plist.add(p);
+                 }
+            }
+            return plist;
+                  
+        } catch (SQLException ex) {
+            
+            System.out.println("hiii");
+                 
+            Logger.getLogger(ServicesDao.class.getName()).log(Level.SEVERE, null, ex);
+            return plist;
+        }
+       
+    }
+    
+    
+    public int updateClosed(ArrayList<Integer> orders,String username) 
+    { 
+       System.out.println("i m here ");
+        try { 
+        	Connection connection = null;
+        	PreparedStatement stmt = null;
+            connection = ConnectionUtil.getConnection(connectionData);
+            String query = null;
+            OrderDataProvider or = new OrderDataProvider();
+            Customer c = new Customer (or);
+        	for (int i = 0 ; i < orders.size() ; i++)
+        	{
+           //      int tech_id = assignTechnician(orders.get(i),store_id);
+                 
+               
+        		or.checkOrderStatus("Closed", orders.get(i));
+        		 query = "update orderdetails set  order_status = 'Closed'  where orderId = ?";
+        		 stmt = connection.prepareStatement(query);
+                 stmt.setInt(1,orders.get(i));
+               
+                 stmt.executeUpdate();
+        	}
+        	
+               return 0;	
+                  
+        } catch (SQLException ex) {
+            
+            System.out.println("hiii");
+                 
+            Logger.getLogger(ServicesDao.class.getName()).log(Level.SEVERE, null, ex);
+            return 1;
+        }
+       
+    }
+    
+    public int TransferOrdersTo(String delid1,String delid2) {
+        
+        ResultSet rs= null;
+           
+           try { 
+            
+            Connection connection = null;
+            
+             
+             String query = "update orderdetails set delivery_id=? where delivery_id=?";
+                
+                PreparedStatement stmt = null;
+                connection = ConnectionUtil.getConnection(connectionData);
+                stmt = connection.prepareStatement(query);
+                int newdeliveryid = Integer.parseInt(delid2);
+                int olddeliveryid = Integer.parseInt(delid1);
+                stmt.setInt(1,newdeliveryid);
+                stmt.setInt(2,olddeliveryid);
+               stmt.executeUpdate();
+                   System.out.println("orders successfully updated with the new delivery id:"+newdeliveryid);           
+                return 0;   
+           } catch (SQLException ex) {
+               
+               System.out.println("transfer orders exception");
+                    
+               Logger.getLogger(ServicesDao.class.getName()).log(Level.SEVERE, null, ex);
+               
+      
+      return 1;
+           }
+     
+   }
+   public int updateOrder(int oid) 
+      { 
+         System.out.println("update order dao ");
+          try { 
+           Connection connection = null;
+           OrderDataProvider or = new OrderDataProvider();
+           Customer c = new Customer (or);
+           or.checkOrderStatus("Serviced", oid);
+              String query = "update orderdetails set order_status='Serviced' where orderId = ?";
+              
+              PreparedStatement stmt = null;
+              connection = ConnectionUtil.getConnection(connectionData);
+              stmt = connection.prepareStatement(query);
+              stmt.setInt(1, oid);
+              
+              stmt.executeUpdate();
+                 return 0; 
+                    
+          } catch (SQLException ex) {
+              
+              System.out.println("in technician update order dao");
+                   
+              Logger.getLogger(ServicesDao.class.getName()).log(Level.SEVERE, null, ex);
+              return 1;
+          }
+         
+      }
+   public ArrayList<TechOrders> viewTechOrders(String username) 
+     {      ArrayList<TechOrders> plist = new ArrayList();
+        
+         try { 
+          Connection connection = null;
+          System.out.println("technician name is "+ username);
+           String query = "select roleid from login where username = ?";
+              int techid = 0;
+              PreparedStatement stmt = null;
+              connection = ConnectionUtil.getConnection(connectionData);
+              stmt = connection.prepareStatement(query);
+              stmt.setString(1,username);
+              ResultSet rs = stmt.executeQuery();
+              if (rs.next())
+              {
+               techid = rs.getInt(1);
+              }
+              System.out.println("tech id for tecsonal is "+techid);
+              
+            query = "select orderId,prodId,make,description,customer_id from orderdetails where tech_id = ? and order_status='PickedUp';";
+             
+           
+             connection = ConnectionUtil.getConnection(connectionData);
+             
+             stmt = connection.prepareStatement(query);
+             stmt.setInt(1,techid);
+             rs = stmt.executeQuery();
+             while (rs.next())
+             {   
+              int  orderId = rs.getInt(1);
+              int  prodid  = rs.getInt(2);
+              String make = rs.getString(3);
+              String description = rs.getString(4);
+              int custid = rs.getInt(5);
+              System.out.println("hiii "+orderId+" cust "+custid+" prod "+prodid+" description "+description);
+              query = "select customerName,customer_phone_no,customer_email_id from customer where customerId = ? ";
+              stmt = connection.prepareStatement(query);
+                 stmt.setInt(1,custid);
+                 ResultSet rs1 = stmt.executeQuery();
+                 String custname = null;
+                 String custphone = null;
+                 String custemail = null;
+                 if (rs1.next())
+                 {
+                  custname = rs1.getString(1);
+                  custphone = rs1.getString(2);
+                  custemail = rs1.getString(3);
+                 }
+                 query = "select company,description from product where prodId  = ? ";
+              stmt = connection.prepareStatement(query);
+                 stmt.setInt(1,prodid);
+                  rs1 = stmt.executeQuery();
+                  if(rs1.next())
+                  {
+             
+              String company = rs1.getString(1);
+              String prodname = rs1.getString(2);
+              
+              TechOrders t = new TechOrders(orderId, prodid, prodname, make, company, description, custname, custemail, custphone);
+              System.out.println(custname+"email"+custemail+"phone"+custphone+"make"+make+"orderid"+orderId);
+                plist.add(t);
+                  }
+             }
+             return plist;
+                   
+         } catch (SQLException ex) {
+             
+             System.out.println("in viewtech orders exception");
+                  
+             Logger.getLogger(ServicesDao.class.getName()).log(Level.SEVERE, null, ex);
+             return plist;
+         }
+        
+     }
 }

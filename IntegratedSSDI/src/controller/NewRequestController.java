@@ -28,6 +28,8 @@ import model.product;
 public class NewRequestController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private ServicesDao serviceDao;
+    private  RequestDispatcher rd = null;
+    private HttpSession session = null;
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -36,6 +38,15 @@ public class NewRequestController extends HttpServlet {
         // TODO Auto-generated constructor stub
     }
 
+
+    public NewRequestController(ServicesDao s,RequestDispatcher rd,HttpSession sess) {
+        super();
+        serviceDao = s;
+        this.rd = rd;
+        session = sess;
+        
+        // TODO Auto-generated constructor stub
+    }
     public void init(ServletConfig config) throws ServletException {
   		super.init(config);
   		ServletContext context = getServletContext();
@@ -46,7 +57,7 @@ public class NewRequestController extends HttpServlet {
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		 processRequest(request, response);
 		
@@ -66,10 +77,10 @@ public class NewRequestController extends HttpServlet {
 	        response.setContentType("text/html;charset=UTF-8");
 	        PrintWriter out = response.getWriter();
 	        try  {
-	        	HttpSession session=request.getSession(false);  
-		          if(session!=null){  
-		              String username=(String)session.getAttribute("username");  
-		                
+	        	 session=request.getSession(false);  
+		          
+		         String username=(String)session.getAttribute("username");  
+		         if(username!=null){      
 		            //  out.print("Hello, "+username); 
 	            /* TODO output your page here. You may use following sample code. */
 	     //     List errorMsgs = new  LinkedList();
@@ -87,7 +98,7 @@ public class NewRequestController extends HttpServlet {
 	                
 	                 System.out.println("inside");
 	                 int order_id = serviceDao.newRequest(store,p,location,description,username);
-	                 RequestDispatcher rd = null;
+	            //     RequestDispatcher rd = null;
 	                 if (order_id != 0)
 	                 {String str = "Request with request id "+order_id+" has been placed ";
 	                 request.setAttribute("msg",str); 

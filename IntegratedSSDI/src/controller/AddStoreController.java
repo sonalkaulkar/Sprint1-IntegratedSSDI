@@ -79,11 +79,11 @@ public class AddStoreController extends HttpServlet {
 	            /* TODO output your page here. You may use following sample code. */
 	     //     List errorMsgs = new  LinkedList();
 	        	if(session == null){session=request.getSession(false);}  
-		          if(session!=null){  
+		          
 		              String username=(String)session.getAttribute("username");  
 		                
 		             // out.print("Hello, "+username); 
-	         
+		              if(username!=null){    
 	           String store_id = request.getParameter("store_id");
 	           String store_name = request.getParameter("Store_Name");
 	           String store_loc = request.getParameter("location");

@@ -11,6 +11,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import model.Login;
 import model.ServicesDao;
@@ -26,6 +27,9 @@ import model.UserFactory;
 public class  UpdateStoreController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private ServicesDao serviceDao;
+
+	   private  RequestDispatcher rd = null;
+	    private HttpSession session = null;
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -34,6 +38,14 @@ public class  UpdateStoreController extends HttpServlet {
         // TODO Auto-generated constructor stub
     }
 
+    public UpdateStoreController(ServicesDao s,RequestDispatcher rd,HttpSession sess) {
+        super();
+        serviceDao = s;
+        this.rd = rd;
+        session = sess;
+        
+        // TODO Auto-generated constructor stub
+    }
     public void init(ServletConfig config) throws ServletException {
   		super.init(config);
   		ServletContext context = getServletContext();
@@ -44,7 +56,7 @@ public class  UpdateStoreController extends HttpServlet {
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		 processRequest(request, response);
 		
@@ -67,7 +79,9 @@ public class  UpdateStoreController extends HttpServlet {
 	        try  {
 	            /* TODO output your page here. You may use following sample code. */
 	     //     List errorMsgs = new  LinkedList();
-	        	
+	        	  HttpSession session=request.getSession(false); 
+	        	  String username=(String)session.getAttribute("username");
+	              if(username!=null){
 //	          PrintWriter out = response.getWriter();
 	           String store_id = request.getParameter("storeId");
 	           String store_name = request.getParameter("StoreName");
@@ -80,7 +94,7 @@ public class  UpdateStoreController extends HttpServlet {
 	                
 	                 System.out.println("inside");
 	                 int flag = serviceDao.updateStore(store);
-	                 RequestDispatcher rd = null;
+	                 //RequestDispatcher rd = null;
 	                 if (flag != 0)
 	                 {    request.setAttribute("store_id",store_id);
 	                	 String str = "Store "+store_id+" not updated Successfully";
@@ -96,16 +110,14 @@ public class  UpdateStoreController extends HttpServlet {
 	                 rd=request.getRequestDispatcher("/UpdateStore.jsp");
 	                 rd.include(request, response);  
 	                 }
-	                 
-	                
-	                 
 
-	                 else{  
-	                            out.print("Please login first");  
-	                            request.getRequestDispatcher("InitialPage.jsp").include(request, response);  
-	                        }
-
-	           
+	              }
+	              else
+	              {
+	            	  out.print("Please login first");  
+                      request.getRequestDispatcher("InitialPage.jsp").include(request, response);  
+                  
+	              }
 	    }
 	        catch (Exception ex) {
 	    	ex.printStackTrace();

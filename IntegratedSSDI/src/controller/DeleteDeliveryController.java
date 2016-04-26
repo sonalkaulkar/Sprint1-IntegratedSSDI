@@ -11,6 +11,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import model.Login;
 import model.ServicesDao;
@@ -28,11 +29,23 @@ import model.technician;
 public class  DeleteDeliveryController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private ServicesDao serviceDao;
+    private  RequestDispatcher rd = null;
+    private HttpSession session = null;
+
     /**
      * @see HttpServlet#HttpServlet()
      */
     public DeleteDeliveryController() {
         super();
+        // TODO Auto-generated constructor stub
+    }
+
+    public DeleteDeliveryController(ServicesDao s,RequestDispatcher rd,HttpSession sess) {
+        super();
+        serviceDao = s;
+        this.rd = rd;
+        session = sess;
+        
         // TODO Auto-generated constructor stub
     }
 
@@ -46,7 +59,7 @@ public class  DeleteDeliveryController extends HttpServlet {
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		 processRequest(request, response);
 		
@@ -69,13 +82,18 @@ public class  DeleteDeliveryController extends HttpServlet {
 	     //     List errorMsgs = new  LinkedList();
 	        	
 	          PrintWriter out = response.getWriter();
+	          HttpSession session=request.getSession(false);  
+	          
+        	  
+              String username=(String)session.getAttribute("username");
+              if(username!=null){    
 	           String del_id = request.getParameter("delId");
 	          
 	           deliveryStaff delivery = new deliveryStaff(del_id);
-	           System.out.println("tech id :"+del_id);
+	           System.out.println("del id :"+del_id);
 	                 System.out.println("inside");
 	                 int flag = serviceDao.deletedelivery(delivery);
-	                 RequestDispatcher rd = null;
+	                 //RequestDispatcher rd = null;
 	                 if (flag == 0)
 	                 {  String str = "Delivery Staff  "+del_id+" deleted Successfully";
 	                 request.setAttribute("msg", str);
@@ -98,7 +116,12 @@ public class  DeleteDeliveryController extends HttpServlet {
 	                 rd.include(request, response); 
               
 	                 }
-	                
+              }
+              else
+              {
+            	  out.print("Please login first");  
+	              request.getRequestDispatcher("InitialPage.jsp").include(request, response);  
+              }
 	                 
 	                
 	                 

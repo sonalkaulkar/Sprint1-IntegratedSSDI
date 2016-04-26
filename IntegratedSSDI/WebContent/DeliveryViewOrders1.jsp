@@ -24,6 +24,33 @@ $(".slidingDiv").slideToggle();
 
 });
 
+
+
+function valthisform()
+{
+    var checkboxs=document.getElementsByName("selectedItems");
+    var okay=false;
+    for(var i=0,l=checkboxs.length;i<l;i++)
+    {
+        if(checkboxs[i].checked)
+        {
+            okay=true;
+            break;
+        }
+    }
+    if(okay)
+    	{
+    	//alert("Thank you for checking a checkbox");
+    	document.getElementById('updt').disabled = false;
+    	    	return true
+    	}
+    else 
+    	{//alert("Please check a checkbox");
+    	document.getElementById('updt').disabled = true;
+    	return false
+    	}
+}
+   
 </script>
 </head>
 <body>
@@ -41,15 +68,17 @@ $(".slidingDiv").slideToggle();
   </div>
   
   <div id="main">
-         <form >
+         <form  id = "updateorder" method = "post" action = "UpdateStatusPickUp" >
              
                    <center>
-               <h1>Orders to be Picked up</h1>
+               <h1>ORDERS TO BE PICKED UP</h1>
+               <br></br>
            <div style="height:200px; overflow:auto"> 
                <table>
             
 
                <tr>
+                   <th>Orders</th>
                    <th>Order Id</th>
                    <th>Customer Name</th>
                    <th>Customer Phone</th>
@@ -73,8 +102,17 @@ $(".slidingDiv").slideToggle();
                    {
                     	   PickUpOrder s = sl.get(i);
 
+				
+
                    out.print("<tr>");
-                   out.print("<td> <input type='text' name='Order id' value='"+s.getOrderId()+"' />  </td>");
+                   %>
+                  
+                   <td align="center">  
+                   <input type="checkbox" name="selectedItems"    
+                       value="<%=s.getOrderId()%>" onclick="  valthisform()" />  
+               </td>
+               <%
+                   out.print("<td> <input type='text' name='order_"+s.getOrderId()+"' value='"+s.getOrderId()+"' />  </td>");
                    out.print("<td> <input type='text' name='customername' value='"+s.getCust_name()+"' />   </td>");
                      out.print("<td> <input type='text' name='customerphone' value='"+s.getCust_phone_no()+"' />   </td>");
                      out.print("<td> <input type='text' name='customeraddress' value='"+s.getCust_address()+"' />   </td>");
@@ -84,10 +122,15 @@ $(".slidingDiv").slideToggle();
                    }}        %>
 
               </table>
-</div>                            
+</div>                  
+<br></br>
+  <input type="submit" id = "updt" value="UPDATE"   onclick=" return valthisform()" />
+   
            </center>
                    
        </form>
+       <br />
+  <center> <a href = "DeliveryStaffHome.jsp"><button>CANCEL</button></a></center>
   </div>
          
   
@@ -98,14 +141,14 @@ $(".slidingDiv").slideToggle();
       <input type="submit" value="VIEW PICKUP ORDERS" /></form>
     <br />
       	
-    <a href="ViewDeliveryOrder.jsp"><button style="height:20px; width: 175spx">VIEW DELIVERY ORDERS</button></a>
-    <br /><br />
-      
+    <form method = "post" action="viewdeliveredcontroller">
+      <input type="submit" value="VIEW DELIVERY ORDERS" /></form>
+    <br />
     <!--  <button style="color:blue;border-radius:10px;height:30px; width: 150px">-->
     <!--   <form method = "post" action="viewStoresController">
       <input type="submit" value="Manage Store" /></form> -->
       
-    <a href="ResetPassword.jsp"><button style="height:20px; width: 150px">CHANGE PASSWORD</button></a>
+    <a href="ResetPassword.jsp"><button>CHANGE PASSWORD</button></a>
   </div>
   <br />
 </div>

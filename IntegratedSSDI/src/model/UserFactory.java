@@ -1,5 +1,7 @@
 package model;
 
+import model.orderObserve.Observer.Customer;
+
 public class UserFactory {
 	 public User getUser(String userType){
 	      if(userType == null){

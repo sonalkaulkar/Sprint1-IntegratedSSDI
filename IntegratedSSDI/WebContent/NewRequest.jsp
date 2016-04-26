@@ -133,7 +133,8 @@ Connection connection =
            <td><center><input type="submit" value="SEARCH" /></center></td>
       <!-- <input type="submit" value="SEARCH" /> -->      
 </form>
-
+<br />
+  <center> <a href = "CustomerHome.jsp"><button>CANCEL</button></a></center>
      
   </div>
   
@@ -147,7 +148,7 @@ Connection connection =
       <form method = "post" action="ViewHistoryController">
       <input type="submit" value="VIEW HISTORY" /></form>
     <br />
-    <a href="ResetPassword.jsp"><button ">RESET PASSWORD</button></a>
+    <a href="ResetPassword.jsp"><button ">CHANGE PASSWORD</button></a>
     <br /><br />
         <form method = "post" action="loadprofilecontroller">
       <input type="submit" value="MANAGE PROFILE" /></form>

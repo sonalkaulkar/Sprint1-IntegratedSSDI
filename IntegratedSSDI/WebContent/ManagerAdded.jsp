@@ -29,19 +29,22 @@
   <div id="left">
     <div class="pad">
  <br />	 
-	  <a href="AddStore.jsp"><button style="height:30px; width: 100px">Add Store</button></a>
+	  <a href="AddStore.jsp"><button>ADD STORE</button></a>
     <br /><br />
       	
       <!--  <button style="color:blue;border-radius:10px;height:30px; width: 150px">-->
       <form method = "post" action="viewStoresController">
-      <input type="submit" value="Manage Store" /></form>
+      <input type="submit" value="MANAGE STORE" /></form>
+  
+    <br />
+<a href="AddProduct.jsp"><button>ADD PRODUCT</button></a>      	
       
     <br /><br />
- 	<a href="ResetPassword.jsp"><button style="height:30px; width: 150px">Reset Password</button></a>
+ 	<a href="ResetPassword.jsp"><button>CHANGE PASSWORD</button></a>
   </div>
   <br />
 </div>
-s
+
 <div id="footer">
      <div id="r"> &copy; Copyright 2016, Your Website - <label> <%
       if(session!=null){  
@@ -50,7 +53,7 @@ s
        out.print("Hello, "+username);
        
         }  
-      %></label><a href="Admin.jsp"> - Home</a> - <a href="logoutcontroller">Logout</a><br />
+      %></label><a href="AdminHome.jsp"> - Home</a> - <a href="logoutcontroller">Logout</a><br />
       Design: SSDI project1</div>
     <div id="l">Contact us: Office-000-000-0000 </div>
   </div>

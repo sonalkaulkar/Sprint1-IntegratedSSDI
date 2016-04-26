@@ -43,12 +43,13 @@
     <br /><br/>
        <form method = "post" action="ViewStoreordersController">
       <input type="submit" value="MONITOR ORDERS" /></form>
+    <br />
+    <a href="TransferOrdersTo.jsp"><button>TRANSFER ORDERS</button></a>
     <br /><br />  
     
   </div>
  
 </div>
-
 <div id="footer">
      <div id="r"> &copy; Copyright 2016, Your Website - <label> <%
       if(session!=null){  
@@ -57,7 +58,7 @@
        out.print("Hello, "+username);
        
         }  
-      %></label><a href="AdminHome.jsp"> - Home</a> - <a href="logoutcontroller">Logout</a><br />
+      %></label><a href="StrManagerHome.jsp"> - Home</a> - <a href="logoutcontroller">Logout</a><br />
       Design: SSDI project1</div>
     <div id="l">Contact us: Office-000-000-0000 </div>
   </div>

@@ -1,4 +1,4 @@
-package org.uncc.util;
+package util.db.connection;
 
 public interface IConnectionData {
 	public String getDriver();

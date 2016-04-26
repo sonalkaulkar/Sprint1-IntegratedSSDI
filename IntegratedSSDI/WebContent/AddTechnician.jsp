@@ -94,7 +94,7 @@ while (rs.next())
 {    techid = rs.getInt(1);
 	 techid += 1;
 	}
-out.print("<td><input type='text' name='techId' value='"+techid+"' /></td>");
+out.print("<td><input type='text' name='techId' value='"+techid+"' readonly /></td>");
 %>
                </tr><td></td><td></td>
                <tr>
@@ -124,6 +124,8 @@ out.print("<td><input type='text' name='techId' value='"+techid+"' /></td>");
            </table>
            <td><center><input type="submit" value="REGISTER" /></td></center>
 </form>
+<br />
+  <center> <a href = "StrManagerHome.jsp"><button>CANCEL</button></a></center>
   </div>
 
   <div id="left">
@@ -143,12 +145,13 @@ out.print("<td><input type='text' name='techId' value='"+techid+"' /></td>");
     <br /><br/>
        <form method = "post" action="ViewStoreordersController">
       <input type="submit" value="MONITOR ORDERS" /></form>
+    <br />
+    <a href="TransferOrdersTo.jsp"><button>TRANSFER ORDERS</button></a>
     <br /><br />  
     
   </div>
  
 </div>
-
 <div id="footer">
      <div id="r"> &copy; Copyright 2016, Your Website - <label> <%
       if(session!=null){  

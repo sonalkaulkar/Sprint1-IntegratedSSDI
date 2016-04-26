@@ -15,8 +15,6 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 
-import org.uncc.util.EmailUtility;
-
 import model.Login;
 import model.ServicesDao;
 import model.ServicesDaoFactory;
@@ -25,6 +23,8 @@ import model.User;
 import model.UserFactory;
 import model.deliveryStaff;
 import model.technician;
+import util.db.connection.EmailUtility;
+
 import java.io.*;
 import java.util.*;
 import javax.servlet.*;
@@ -43,6 +43,8 @@ public class AddStoreManagerController extends HttpServlet {
     private String port;
     private String user;
     private String pass;
+    private  RequestDispatcher rd = null;
+    private HttpSession session = null;
  
     /**
      * @see HttpServlet#HttpServlet()
@@ -52,6 +54,14 @@ public class AddStoreManagerController extends HttpServlet {
         // TODO Auto-generated constructor stub
     }
 
+    public AddStoreManagerController(ServicesDao s,RequestDispatcher rd,HttpSession sess) {
+        super();
+        serviceDao = s;
+        this.rd = rd;
+        session = sess;
+        
+        // TODO Auto-generated constructor stub
+    }
     public void init(ServletConfig config) throws ServletException {
   		super.init(config);
   		ServletContext context = getServletContext();
@@ -66,7 +76,7 @@ public class AddStoreManagerController extends HttpServlet {
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		 processRequest(request, response);
 		
@@ -86,14 +96,14 @@ public class AddStoreManagerController extends HttpServlet {
 	        response.setContentType("text/html;charset=UTF-8");
 	        PrintWriter out = response.getWriter();
 	        try  {
-	        	HttpSession session=request.getSession(false);  
-		          if(session!=null){  
+	        	 session=request.getSession(false);  
+		           
 		              String username=(String)session.getAttribute("username");  
-		                
+		              if(username!=null){    
 		              //out.print("Hello, "+username); 
 	           System.out.println("inside add storemanager controller");
 	       
-	           RequestDispatcher rd = null;
+	           //RequestDispatcher rd = null;
 	           String store_id = request.getParameter("store_id");
 	           String manager_username = request.getParameter("username");
 	           String manager = request.getParameter("manager");//change these names as per jsp names

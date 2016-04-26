@@ -1,4 +1,4 @@
-package org.uncc.util.copy;
+package util.db.connection;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

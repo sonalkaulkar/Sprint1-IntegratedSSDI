@@ -16,11 +16,11 @@ import org.junit.Test;
 
 
 import org.uncc.exception.InvalidTestData;
-import org.uncc.util.ConnectionUtil;
-import org.uncc.util.IConnectionData;
-import org.uncc.util.TestConnectionData;
 
 import model.*;
+import util.db.connection.ConnectionUtil;
+import util.db.connection.IConnectionData;
+import util.db.connection.TestConnectionData;
 
 public class TestadddeliveryDao {
 	private static ServicesDaoFactory factory;

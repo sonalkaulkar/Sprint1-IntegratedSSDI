@@ -13,7 +13,7 @@ import javax.servlet.http.HttpSession;
 /**
  * Servlet implementation class LogoutController
  */
-@WebServlet("/LogoutController")
+
 public class LogoutController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -45,12 +45,14 @@ public class LogoutController extends HttpServlet {
 		 
 		 response.setContentType("text/html");  
          PrintWriter out=response.getWriter();  
-         HttpSession session=request.getSession();  
-         session.invalidate();  
+         HttpSession session=request.getSession(false);
+         if(session != null)
+
+        	 {session.invalidate();  
            
-         //out.print("You are successfully logged out!");     
+         out.print("You are successfully logged out!");     
          request.getRequestDispatcher("/InitialPage.jsp").include(request, response);  
-           
+        	 }
         
            
          out.close();   

@@ -35,7 +35,7 @@
   </div>
 </div>
 <div id="footer">
-     <div id="r"> &copy; Copyright 2016, Your Website - <label> </label><a href="CustomerHome.jsp"> - Home</a> - <a href="logoutcontroller">Logout</a><br />
+     <div id="r"> &copy; Copyright 2016, Your Website - <label> </label><a href="InitialPage.jsp"> - Home</a> - <a href="logoutcontroller">Logout</a><br />
       Design: SSDI project1</div>
     <div id="l">Contact us: Office-000-000-0000 </div>
   </div>

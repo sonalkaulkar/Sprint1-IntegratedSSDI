@@ -9,7 +9,7 @@ import org.junit.Test;
 
 import com.sun.media.sound.InvalidDataException;
 
-import model.Customer;
+import model.orderObserve.Observer.Customer;
 
 
 public class CustomerTest {

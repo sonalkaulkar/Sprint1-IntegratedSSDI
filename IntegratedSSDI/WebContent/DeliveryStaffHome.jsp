@@ -51,14 +51,15 @@ $(".slidingDiv").slideToggle();
       <input type="submit" value="VIEW PICKUP ORDERS" /></form>
     <br />
       	
-    <a href="ViewDeliveryOrder.jsp"><button style="height:20px; width: 175spx">VIEW DELIVERY ORDERS</button></a>
-    <br /><br />
+   <form method = "post" action="viewdeliveredcontroller">
+      <input type="submit" value="VIEW DELIVERY ORDERS" /></form>
+    <br />
       
     <!--  <button style="color:blue;border-radius:10px;height:30px; width: 150px">-->
     <!--   <form method = "post" action="viewStoresController">
       <input type="submit" value="Manage Store" /></form> -->
       
-    <a href="ResetPassword.jsp"><button style="height:20px; width: 150px">CHANGE PASSWORD</button></a>
+    <a href="ResetPassword.jsp"><button>CHANGE PASSWORD</button></a>
   </div>
   <br />
 </div>

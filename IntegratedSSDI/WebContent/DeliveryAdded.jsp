@@ -32,21 +32,25 @@
    <a href="AddTechnician.jsp"><button>ADD TECHNICIAN</button></a>
     <br /><br />
       <form method = "post" action="viewtechniciancontroller">
-      <input type="submit" value="Delete Technician" /></form>
-    <br /><br />
+      <input type="submit" value="DELETE TECHNICIAN" /></form>
+    <br />
     <a href="AddDeliverystaff.jsp"><button>ADD DELIVERY STAFF</button></a>
     <br /><br />
        <form method = "post" action="ViewDeliveryStaffController">
-      <input type="submit" value="Delete Delivery Staff" /></form>
-    <br /><br />
-    
+      <input type="submit" value="DELETE DELIVERY STAFF" /></form>
+    <br />
+    <a href="ResetPassword.jsp"><button ">CHANGE PASSWORD</button></a>
+    <br /><br/>
        <form method = "post" action="ViewStoreordersController">
-      <input type="submit" value="Monitor Orders" /></form>
+      <input type="submit" value="MONITOR ORDERS" /></form>
     <br /><br />  
+    
+    <a href="TransferOrdersTo.jsp"><button>TRANSFER ORDERS</button></a>
+    <br /><br />  
+    
   </div>
  
 </div>
-
 <div id="footer">
      <div id="r"> &copy; Copyright 2016, Your Website - <label> <%
       if(session!=null){  
@@ -55,7 +59,7 @@
        out.print("Hello, "+username);
        
         }  
-      %></label><a href="AdminHome.jsp"> - Home</a> - <a href="logoutcontroller">Logout</a><br />
+      %></label><a href="StrManagerHome.jsp"> - Home</a> - <a href="logoutcontroller">Logout</a><br />
       Design: SSDI project1</div>
     <div id="l">Contact us: Office-000-000-0000 </div>
   </div>

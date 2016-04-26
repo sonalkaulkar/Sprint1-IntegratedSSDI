@@ -2,6 +2,7 @@
 <%@page import="java.util.LinkedList"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="model.Store"%>
+<%@ page import="java.sql.*" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -63,8 +64,31 @@
               </table>
               </div>
         <table><tr>
-                   <td>Enter the store Id :
-                   <input type ="text" name="storeId" /></td>
+                                      <td>Enter the store Id :</td>
+                   <%
+    			try{
+Class.forName("com.mysql.jdbc.Driver");
+Connection connection = 
+         DriverManager.getConnection
+            ("jdbc:mysql://localhost:3306/ssdi","root","UnccSonal11");
+String query = "select storeId from store;";
+       PreparedStatement statement = connection.prepareStatement(query) ;
+	   ResultSet resultset1 =statement.executeQuery() ;
+%>
+		<td><select name = "storeId">
+        <%  while(resultset1.next()){ %>
+            <option ><%= resultset1.getString(1)%></option>
+        <% } %>
+        </select>
+        </td>
+        <%
+//**Should I input the codes here?**
+        }
+        catch(Exception e)
+        {
+             out.println("wrong entry"+e);
+        }
+%>
            </tr></table>
                <table> <tr>   
                    <td><input type="submit" name="update" value="Update Store"   onclick="form.action='loadstorecontroller';"/></td>
@@ -75,20 +99,25 @@
            </center>
                    
        </form>
+       <br />
+  <center> <a href = "AdminHome.jsp"><button>CANCEL</button></a></center>
   </div>
 
   <div id="left">
     <div class="pad">
  <br />	 
-	  <a href="AddStore.jsp"><button style="height:30px; width: 100px">Add Store</button></a>
+	  <a href="AddStore.jsp"><button>ADD STORE</button></a>
     <br /><br />
       	
       <!--  <button style="color:blue;border-radius:10px;height:30px; width: 150px">-->
       <form method = "post" action="viewStoresController">
-      <input type="submit" value="Manage Store" /></form>
+      <input type="submit" value="MANAGE STORE" /></form>
+  
+    <br />
+<a href="AddProduct.jsp"><button>ADD PRODUCT</button></a>      	
       
     <br /><br />
- 	<a href="ResetPassword.jsp"><button style="height:30px; width: 150px">Reset Password</button></a>
+ 	<a href="ResetPassword.jsp"><button>CHANGE PASSWORD</button></a>
   </div>
   <br />
 </div>

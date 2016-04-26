@@ -17,8 +17,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.uncc.util.EmailUtility;
-
 import model.Login;
 import model.ServicesDao;
 import model.ServicesDaoFactory;
@@ -27,6 +25,7 @@ import model.User;
 import model.UserFactory;
 import model.deliveryStaff;
 import model.technician;
+import util.db.connection.EmailUtility;
 
 /**
  * Servlet implementation class AddStoreController
@@ -96,9 +95,9 @@ public class AddDeliveryStaffController extends HttpServlet {
 	           PrintWriter out = response.getWriter();
 	         
 	            session=request.getSession(false); 
-		          if(session!=null){  
+		       
 		              String username=(String)session.getAttribute("username");  
-		                
+		              if(username!=null){    
 		         //     out.print("Hello, "+username);  
 	          
 	           String delivery_user = request.getParameter("delusername");
@@ -114,15 +113,16 @@ public class AddDeliveryStaffController extends HttpServlet {
 	                Login l = new Login(delivery_user,delivery_user,0);
 	                 
 	                 int flag = serviceDao.addDeliveryStaff(DStaff,l,username);
+	                 System.out.println("print flag"+flag);
 	                 if (flag == 0)
 	                 {   String recipient  = deliv_email;
                      String subject = "Registered as delivery staff";
-                     String content = "Your username is Del"+username+" and password is the same as the username";
+                     String content = "Your username is Del"+delivery_user+" and password is the same as the username";
                      String resultMessage = "";
                      String str = "Registration Successful";
                 	 request.setAttribute("msg", str);
                      if (rd == null)
-	                	{
+	                	
                     try{
                      EmailUtility.sendEmail(host, port, user, pass, recipient, subject,
                              content);
@@ -138,7 +138,7 @@ public class AddDeliveryStaffController extends HttpServlet {
 	                	
 		                 rd=request.getRequestDispatcher("/DeliveryAdded.jsp");
 		                 rd.include(request, response); 
-	                	}
+	                	
 	                 }
 	                
 	                 if (flag == 2)

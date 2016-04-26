@@ -23,8 +23,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.uncc.util.EmailUtility;
-
 import com.sun.jmx.snmp.Timestamp;
 import com.sun.org.apache.xerces.internal.impl.xpath.regex.ParseException;
 
@@ -35,6 +33,7 @@ import model.Store;
 import model.User;
 import model.UserFactory;
 import model.technician;
+import util.db.connection.EmailUtility;
 
 /**
  * Servlet implementation class AddStoreController
@@ -47,11 +46,22 @@ public class AddTechController extends HttpServlet {
     private String port;
     private String user;
     private String pass;
+    private  RequestDispatcher rd = null;
+    private HttpSession session = null;
     /**
      * @see HttpServlet#HttpServlet()
      */
     public AddTechController() {
         super();
+        
+        // TODO Auto-generated constructor stub
+    }
+
+    public AddTechController(ServicesDao s,RequestDispatcher rd,HttpSession sess) {
+        super();
+        serviceDao = s;
+        this.rd = rd;
+        session = sess;
         
         // TODO Auto-generated constructor stub
     }
@@ -70,7 +80,7 @@ public class AddTechController extends HttpServlet {
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		 processRequest(request, response);
 		
@@ -90,19 +100,17 @@ public class AddTechController extends HttpServlet {
 	        response.setContentType("text/html;charset=UTF-8");
 	        PrintWriter out = response.getWriter();
 	        try  {
-	        	HttpSession session=request.getSession(false);  
-		          if(session!=null){  
+	        	 session=request.getSession(false);  
+		          
 		              String username=(String)session.getAttribute("username");  
-		                
+		              if(username!=null){    
 		             // out.print("Hello, "+username);  
 	           System.out.println("inside add technician controller");
 	        //   PrintWriter out = response.getWriter();
-	           RequestDispatcher rd = null;
+	          // RequestDispatcher rd = null;
 	           
 	           String tech_id = request.getParameter("techId");//change these names as per jsp names
 	           String tech_name = request.getParameter("techName");
-	           //String tech_status = request.getParameter("techstatus");
-	           //String no_of_orders = request.getParameter("Ordercount") ;
 	           String tech_phone = request.getParameter("tech_phone_no");
 	           String tech_emailid = request.getParameter("tech_email_id");
 	       //    String store_id = request.getParameter("store_id");
@@ -121,8 +129,8 @@ public class AddTechController extends HttpServlet {
 	                 int flag = serviceDao.addTechnician(tech,L,username);
 	                 if (flag == 0)
 	                 {	String recipient  = tech_emailid;
-                     String subject = "Registered as delivery staff";
-                     String content = "Your username is Tec"+username+" and password is the same as the username";
+                     String subject = "Registered as  technician";
+                     String content = "Your username is Tec"+username1+" and password is the same as the username";
                      String resultMessage = "";
                     try{
                      EmailUtility.sendEmail(host, port, user, pass, recipient, subject,

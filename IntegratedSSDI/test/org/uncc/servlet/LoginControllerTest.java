@@ -35,6 +35,8 @@ import controller.logincontroller;
 import model.Login;
 import model.ServicesDao;
 import model.ServicesDaoFactory;
+import model.User;
+import model.UserFactory;
 
 public class LoginControllerTest extends Mockito {
 
@@ -78,7 +80,19 @@ public class LoginControllerTest extends Mockito {
         //when(serviceDao.checkLogin(anyObject())).thenReturn(0);
         when(request.getSession()).thenReturn(session);
         when(request.getParameterMap()).thenReturn(parameters);
-        
+        when(request.getRequestDispatcher(anyString())).thenAnswer(new Answer() {
+
+            /**
+             * @see org.mockito.stubbing.Answer#answer(org.mockito.invocation.InvocationOnMock)
+             */
+            @Override
+            public Object answer(InvocationOnMock aInvocation) throws Throwable {
+
+                
+
+                return rd;
+            }
+        });
         when(request.getParameter(anyString())).thenAnswer(new Answer() {
 
             /**
@@ -92,7 +106,21 @@ public class LoginControllerTest extends Mockito {
                 return parameters.get(key);
             }
         });
+        UserFactory uf =  new UserFactory();
+        User u = uf.getUser("adm");
+        when(u.directUser(request)).thenAnswer(new Answer() {
 
+            /**
+             * @see org.mockito.stubbing.Answer#answer(org.mockito.invocation.InvocationOnMock)
+             */
+            @Override
+            public Object answer(InvocationOnMock aInvocation) throws Throwable {
+
+                
+
+                return rd;
+            }
+        });
         when(session.getAttribute(anyString())).thenAnswer(new Answer() {
 
             /**
@@ -193,14 +221,15 @@ public class LoginControllerTest extends Mockito {
      * @throws IOException
      * @throws ServletException
      */
-/*    @Test
+    @Test
     public void testInvalidLogin() throws ServletException, IOException {
     	Login l = new Login();
     
-    	when(serviceDao.checkLogin(l)).thenReturn(30);
+    	
 
          parameters.put("username", "ayui");
-         parameters.put("password", "ad");        
+         parameters.put("password", "ad");
+         when(serviceDao.checkLogin(anyObject())).thenReturn(1);
         servlet.doGet(request, response);
 
         Object object = attributes.get("msg");
@@ -213,5 +242,5 @@ public class LoginControllerTest extends Mockito {
         assertEquals("Invalid Username or Password", message);
     }
 
-  */ 
+   
 }

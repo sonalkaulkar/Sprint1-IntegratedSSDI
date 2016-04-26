@@ -1,13 +1,13 @@
-package org.uncc.util.copy;
+package util.db.connection;
 
 public class TestConnectionData implements IConnectionData {
 	// Driver
 	private static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
 	// Database URL
-	private static final String DB_URL = "jdbc:mysql://localhost:3306/registration_test";
+	private static final String DB_URL = "jdbc:mysql://localhost:3306/ssdi_test";
 	// Database credentials
 	private static final String USERNAME = "root";
-	private static final String PASSWORD = "password";
+	private static final String PASSWORD = "UnccSonal11";
 
 	@Override
 	public String getDriver() {

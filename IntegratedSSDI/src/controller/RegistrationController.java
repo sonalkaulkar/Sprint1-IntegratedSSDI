@@ -15,10 +15,8 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
-import org.uncc.util.EmailUtility;
-
-import model.Customer;
 import model.Login;
 import model.ServicesDao;
 import model.ServicesDaoFactory;
@@ -27,6 +25,8 @@ import model.User;
 import model.UserFactory;
 import model.deliveryStaff;
 import model.technician;
+import model.orderObserve.Observer.Customer;
+import util.db.connection.EmailUtility;
 
 /**
  * Servlet implementation class RegistrationController
@@ -39,11 +39,22 @@ public class RegistrationController extends HttpServlet {
     private String port;
     private String user;
     private String pass;
+    private  RequestDispatcher rd = null;
+    private HttpSession session = null;
     /**
      * @see HttpServlet#HttpServlet()
      */
     public RegistrationController() {
         super();
+        // TODO Auto-generated constructor stub
+    }
+    
+    public RegistrationController(ServicesDao s,RequestDispatcher rd,HttpSession sess) {
+        super();
+        serviceDao = s;
+        this.rd = rd;
+        session = sess;
+        
         // TODO Auto-generated constructor stub
     }
 
@@ -61,7 +72,7 @@ public class RegistrationController extends HttpServlet {
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		 processRequest(request, response);
 		
@@ -83,7 +94,7 @@ public class RegistrationController extends HttpServlet {
 	            
 	           System.out.println("inside registration controller");
 	           PrintWriter out = response.getWriter();
-	           RequestDispatcher rd = null;
+	           //RequestDispatcher rd = null;
 	           
 	           String customer_id = request.getParameter("customerId");//change these names as per jsp names
 	           String customer_name = request.getParameter("customerName");

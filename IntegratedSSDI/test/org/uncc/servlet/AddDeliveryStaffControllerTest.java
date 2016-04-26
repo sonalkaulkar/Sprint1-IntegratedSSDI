@@ -77,9 +77,22 @@ public class AddDeliveryStaffControllerTest extends Mockito {
        
         
         //when(serviceDao.checkLogin(anyObject())).thenReturn(0);
-        when(request.getSession()).thenReturn(session);
+        when(request.getSession(false)).thenReturn(session);
         when(request.getParameterMap()).thenReturn(parameters);
-        
+        when(request.getRequestDispatcher(anyString())).thenAnswer(new Answer() {
+
+            /**
+             * @see org.mockito.stubbing.Answer#answer(org.mockito.invocation.InvocationOnMock)
+             */
+            @Override
+            public Object answer(InvocationOnMock aInvocation) throws Throwable {
+
+                
+
+                return rd;
+            }
+        });
+
         when(request.getParameter(anyString())).thenAnswer(new Answer() {
 
             /**
@@ -171,7 +184,7 @@ public class AddDeliveryStaffControllerTest extends Mockito {
      */
     @Test
     public void testAddDelivery() throws ServletException, IOException {
-    	Login l = new Login("admin","admin",0);
+    	//Login l = new Login("admin","admin",0);
     	 when(serviceDao.addDeliveryStaff(anyObject(), anyObject(),anyString())).thenReturn(0);
         parameters.put("delusername", "sonal");
         parameters.put("deliveryId", "1");
@@ -203,25 +216,32 @@ public class AddDeliveryStaffControllerTest extends Mockito {
      * @throws IOException
      * @throws ServletException
      */
-/*    @Test
-    public void testInvalidLogin() throws ServletException, IOException {
-    	Login l = new Login();
-    
-    	when(serviceDao.checkLogin(l)).thenReturn(30);
-
-         parameters.put("username", "ayui");
-         parameters.put("password", "ad");        
+    @Test
+    public void testInvalidAddDelivery() throws ServletException, IOException {
+    	//Login l = new Login("admin","admin",0);
+    	 when(serviceDao.addDeliveryStaff(anyObject(), anyObject(),anyString())).thenReturn(1);
+        parameters.put("delusername", "sonal");
+        parameters.put("deliveryId", "1");
+        parameters.put("deliveryName", "sonal");
+        parameters.put("location", "UT");
+        parameters.put("delivery_email_id", "soanl@gmail.com");
+        parameters.put("delivery_phone_no", "7878787878");
+        parameters.put("store_id", "1");
+        parameters.put("delivery_add", "Charlotte");
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+		PrintWriter writer = new PrintWriter(new OutputStreamWriter(output));
+		when(response.getWriter()).thenReturn(writer);
         servlet.doGet(request, response);
 
         Object object = attributes.get("msg");
 
        assertNotNull(object);
-        assertTrue(String.class.isAssignableFrom(object.getClass()));
+         assertTrue(String.class.isAssignableFrom(object.getClass()));
 
         String message = (String) object;
         System.out.println(message);
-        assertEquals("Invalid Username or Password", message);
+        assertEquals("Delivery staff not added", message);
     }
 
-  */ 
+
 }

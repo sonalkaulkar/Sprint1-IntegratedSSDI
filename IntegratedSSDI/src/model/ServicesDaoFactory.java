@@ -1,8 +1,8 @@
 package model;
 
-import org.uncc.util.IConnectionData;
-import org.uncc.util.ProductionConnectionData;
-import org.uncc.util.TestConnectionData;
+import util.db.connection.IConnectionData;
+import util.db.connection.ProductionConnectionData;
+import util.db.connection.TestConnectionData;
 
 public class ServicesDaoFactory {
 	private static ServicesDaoFactory instance;

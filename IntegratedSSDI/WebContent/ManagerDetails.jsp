@@ -93,20 +93,25 @@
            </table>
            <td><center><input type="submit" value="REGISTER" /></td></center>
 </form>
+<br />
+  <center> <a href = "AdminHome.jsp"><button>CANCEL</button></a></center>
   </div>
 
   <div id="left">
     <div class="pad">
  <br />	 
-	  <a href="AddStore.jsp"><button style="height:30px; width: 100px">Add Store</button></a>
+	  <a href="AddStore.jsp"><button>ADD STORE</button></a>
     <br /><br />
       	
       <!--  <button style="color:blue;border-radius:10px;height:30px; width: 150px">-->
       <form method = "post" action="viewStoresController">
-      <input type="submit" value="Manage Store" /></form>
+      <input type="submit" value="MANAGE STORE" /></form>
+  
+    <br />
+<a href="AddProduct.jsp"><button>ADD PRODUCT</button></a>      	
       
     <br /><br />
- 	<a href="ResetPassword.jsp"><button style="height:30px; width: 150px">Reset Password</button></a>
+ 	<a href="ResetPassword.jsp"><button>CHANGE PASSWORD</button></a>
   </div>
   <br />
 </div>

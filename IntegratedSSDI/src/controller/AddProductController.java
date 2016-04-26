@@ -79,9 +79,9 @@ public class AddProductController extends HttpServlet {
 	            /* TODO output your page here. You may use following sample code. */
 	     //     List errorMsgs = new  LinkedList();
 	        	if (session == null){session=request.getSession(false);}  
-	        if(session!=null){  
+	      
 		              String username=(String)session.getAttribute("username");  
-		                
+		              if(username!=null){    
 		             // System.out.print("Hello, "+username); 	
 	          
 	           int store_id = Integer.parseInt(request.getParameter("store_id"));
@@ -126,11 +126,10 @@ public class AddProductController extends HttpServlet {
 	                	 String str = " Product   added  successful";
 		                 request.setAttribute("msg",str); 
 		                 request.setAttribute("store_id",store_id);
-		                 if (rd == null)
-		                 {
+		                 
 		                	 rd=request.getRequestDispatcher("/ProductAdded.jsp");
 		                	 rd.include(request, response);  
-		                 }
+		                 
 	                 }
 
 	                 
