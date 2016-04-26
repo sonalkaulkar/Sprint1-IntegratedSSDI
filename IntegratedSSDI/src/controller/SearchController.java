@@ -91,7 +91,7 @@ public class SearchController extends HttpServlet {
 	           
 		          }
 		          else{  
-		              out.print("Please login first");  
+		              //out.print("Please login first");  
 		              request.getRequestDispatcher("InitialPage.jsp").include(request, response);  
 		          }
 }  catch (Exception ex) {

@@ -79,7 +79,7 @@ public class ViewDeliveryController extends HttpServlet {
 	                   rd1.include(request, response);
 	           
 	    }  else{  
-            out.print("Please login first");  
+            //out.print("Please login first");  
             request.getRequestDispatcher("InitialPage.jsp").include(request, response);  
         }
  }catch (Exception ex) {
